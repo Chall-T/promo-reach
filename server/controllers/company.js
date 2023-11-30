@@ -1,7 +1,21 @@
 import express from 'express';
-import {get, merge} from 'lodash';
+import pkg from 'lodash';
+const {get, merge} = pkg;
 import { deleteCompanyById, getCompanyById, getCompanies, companyCreate, getCompanyByName } from '../models/Company.js'
 import {User, getUserById} from '../models/User.js';
+
+
+export const getCompanyInfo = async(req, res) =>{
+    try{
+        const { id } = req.params;
+        const company = await getCompanyById(id);
+
+        return res.status(200).json(company);
+    }catch (error){
+        console.log(error);
+        return res.sendStatus(400);
+    }
+}
 
 export const getAllCompanies = async(req, res) =>{
     try{

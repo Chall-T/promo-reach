@@ -45,7 +45,7 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", UserSchema);
+export const User = mongoose.model("User", UserSchema);
 export const getUserByEmail = (email) => User.findOne({email});
 export const createUser = (data) => new User(data).save().then((user) => user.toObject());
 export const getUserById = (id) => User.findById(id);

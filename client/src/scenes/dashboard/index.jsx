@@ -1,6 +1,7 @@
 import React from "react";
 import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
+import  { Navigate } from 'react-router-dom';
 import {
   DownloadOutlined,
   Email,
@@ -24,7 +25,10 @@ import StatBox from "components/StatBox";
 const Dashboard = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data, isLoading } = useGetDashboardQuery();
+  const { data, isLoading, error } = useGetDashboardQuery();
+  if (error){
+    return <Navigate to='/signIn'  />
+  }
 
   const columns = [
     {

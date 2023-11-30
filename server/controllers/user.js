@@ -1,9 +1,9 @@
 import express from 'express';
-
-import { deleteUserById, getUserById, getUsers, userAcceptCompanyInvite, userSendCompanyInvite } from '../database/users';
-import {get, merge} from 'lodash';
-import { getCompaniesByUserId, getCompanyById } from '../models/Company';
-import { addUserToCompany, deleteUserFromCompany } from './companyUser';
+import { getUserById } from '../models/User.js';
+import pkg from 'lodash';
+const {get, merge} = pkg;
+import { getCompanyById } from '../models/Company.js';
+import { addUserToCompany, deleteUserFromCompany } from './companyUser.js';
 
 
 export const updateUser = async(req, res) =>{
@@ -60,29 +60,29 @@ export const CompanyAcceptInvite = async(req, res) =>{
 
 export const CompanyCreateInvite = async(req, res) =>{
     try{
-        const { invitedUserId } = req.params;
-        const { company_id } = req.body;
+        const { company_id } = req.params;
+        const { user_id } = req.body;
 
         const id = req.userId
 
-        if (!company_id) {
+        if (!user) {
             return res.sendStatus(400);
         }
-        const invitedUser = await getUserById(invitedUserId);
+        const invitedUser = await getUserById(company_id);
         const user = await getUserById(id);
-        const company = await getCompanyById(company_id);
+        const company = await getCompanyById(user);
         for (var i=0; i <= user.companies.length; i++){
             if (user.companies[i] == company.id){
                 // check roles
             }
         }
-        if (invitedUser.companies.includes(company_id)){
+        if (invitedUser.companies.includes(user)){
             return res.status(400).json({ message: "User already is in the company!" });
         }
-        if (invitedUser.companies_invites.includes(company_id)){
+        if (invitedUser.companies_invites.includes(user)){
             return res.status(200).json({ message: "User was already invited!" });
         }
-        invitedUser.companies_invites.push(company_id)
+        invitedUser.companies_invites.push(user)
 
         await invitedUser.save()
         return res.status(200).json(invitedUser).end();

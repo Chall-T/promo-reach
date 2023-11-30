@@ -3,7 +3,8 @@ import User from '../models/User.js';
 import { Role } from '../models/Role.js';
 
 export const verifyToken = (req, res, next) => {
-    let token = req.headers["x-access-token"];
+    let token = req.headers["x-access-token"] || req.cookies['accessToken'];
+
 
     if (!token) {
     return res.status(403).json({ message: "No token provided!" });

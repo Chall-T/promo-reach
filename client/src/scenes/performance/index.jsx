@@ -5,12 +5,15 @@ import { useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "components/Header";
 import CustomColumnMenu from "components/DataGridCustomColumnMenu";
+import  { Navigate } from 'react-router-dom';
 
 const Performance = () => {
   const theme = useTheme();
   const userId = useSelector((state) => state.global.userId);
-  const { data, isLoading } = useGetUserPerformanceQuery(userId);
-
+  const { data, isLoading, error } = useGetUserPerformanceQuery(userId);
+  if (error){
+    return <Navigate to='/signIn'  />
+  }
   const columns = [
     {
       field: "_id",

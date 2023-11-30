@@ -4,10 +4,14 @@ import { useGetAdminsQuery } from "state/api";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "components/Header";
 import CustomColumnMenu from "components/DataGridCustomColumnMenu";
+import  { Navigate } from 'react-router-dom';
 
 const Admin = () => {
   const theme = useTheme();
-  const { data, isLoading } = useGetAdminsQuery();
+  const { data, isLoading, error } = useGetAdminsQuery();
+  if (error){
+    return <Navigate to='/signIn'  />
+  }
 
   const columns = [
     {

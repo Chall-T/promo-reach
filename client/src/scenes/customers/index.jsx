@@ -3,10 +3,14 @@ import { Box, useTheme } from "@mui/material";
 import { useGetCustomersQuery } from "state/api";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
+import  { Navigate } from 'react-router-dom';
 
 const Customers = () => {
   const theme = useTheme();
-  const { data, isLoading } = useGetCustomersQuery();
+  const { data, isLoading, error } = useGetCustomersQuery();
+  if (error){
+    return <Navigate to='/signIn'  />
+  }
   console.log("data", data);
 
   const columns = [

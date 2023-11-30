@@ -4,11 +4,14 @@ import { useGetGeographyQuery } from "state/api";
 import Header from "components/Header";
 import { ResponsiveChoropleth } from "@nivo/geo";
 import { geoData } from "state/geoData";
+import  { Navigate } from 'react-router-dom';
 
 const Geography = () => {
   const theme = useTheme();
-  const { data } = useGetGeographyQuery();
-
+  const { data, error } = useGetGeographyQuery();
+  if (error){
+    return <Navigate to='/signIn'  />
+  }
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="GEOGRAPHY" subtitle="Find where your users are located." />

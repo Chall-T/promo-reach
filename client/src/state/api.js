@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_BASE_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_BASE_URL, credentials: 'include' }),
   reducerPath: "adminApi",
   tagTypes: [
     "User",
@@ -15,6 +15,17 @@ export const api = createApi({
     "Dashboard",
   ],
   endpoints: (build) => ({
+    signIn:  build.query({
+      query: ({ email, password }) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: {
+          email: email,
+          password: password
+        }
+      }),
+      providesTags: ["User"],
+    }),
     getUser: build.query({
       query: (id) => `general/user/${id}`,
       providesTags: ["User"],
@@ -59,6 +70,7 @@ export const api = createApi({
 });
 
 export const {
+  useSignInQuery,
   useGetUserQuery,
   useGetProductsQuery,
   useGetCustomersQuery,

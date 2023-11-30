@@ -6,6 +6,7 @@ import { getRefreshToken, deleteRefreshToken, createRefreshToken } from "../mode
 import * as dotenv from 'dotenv';
 import merge from 'lodash';
 import jwt from 'jsonwebtoken';
+import { serialize } from 'cookie';
 
 
 export const register = async (req, res) => {
@@ -69,7 +70,25 @@ export const login = async(req, res) =>{
             process.env.SECRET, 
             { 
                 expiresIn: 259200 // 3 days
+            }
+        );
+        const serializedAccessToken = serialize('accessToken', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 24 * 30,
+            path: '/',
         });
+        res.setHeader('Set-Cookie', serializedAccessToken);
+        const serializedRefreshToken = serialize('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 24 * 30,
+            path: '/',
+        });
+        res.setHeader('Set-Cookie', serializedRefreshToken);
+
         await createRefreshToken(refreshToken);
         var authorities = [];
         for (let i = 0; i < user.roles.length; i++) {
@@ -90,8 +109,6 @@ export const login = async(req, res) =>{
         userWithToken.authorities = authorities;
         userWithToken.accessToken = token;
         userWithToken.refreshToken = refreshToken;
-
-        console.log(userWithToken)
         return res.status(200).json(userWithToken).end();
     }catch (error){
         console.log(error);
@@ -139,4 +156,10 @@ export const refreshToken = async (req, res) => {
         console.log(error);
         return res.sendStatus(400);
     }
+};
+
+export const logOut = async (req, res) => {
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    return res.sendStatus(200);
 };

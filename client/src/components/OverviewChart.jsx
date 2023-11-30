@@ -2,10 +2,11 @@ import React, { useMemo } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
 import { useGetSalesQuery } from "state/api";
+import  { Navigate } from 'react-router-dom';
 
 const OverviewChart = ({ isDashboard = false, view }) => {
   const theme = useTheme();
-  const { data, isLoading } = useGetSalesQuery();
+  const { data, isLoading, error } = useGetSalesQuery();
 
   const [totalSalesLine, totalUnitsLine] = useMemo(() => {
     if (!data) return [];
@@ -21,7 +22,9 @@ const OverviewChart = ({ isDashboard = false, view }) => {
       color: theme.palette.secondary[600],
       data: [],
     };
-
+    if (error){
+      return <Navigate to='/signIn'  />
+    }
     Object.values(monthlyData).reduce(
       (acc, { month, totalSales, totalUnits }) => {
         const curSales = acc.sales + totalSales;

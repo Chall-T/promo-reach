@@ -1,6 +1,7 @@
 import express from 'express';
-import {get, merge} from 'lodash';
-import { getCompaniesByUserId } from '../models/CompanyUsers';
+import pkg from 'lodash';
+const {get, merge} = pkg;
+import { getCompaniesByUserId } from '../models/CompanyUsers.js';
 
 
 export const isAuthenticated = async(req, res, next) =>{

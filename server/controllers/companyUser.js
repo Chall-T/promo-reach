@@ -1,5 +1,6 @@
 import express from 'express';
-import {get, merge} from 'lodash';
+import pkg from 'lodash';
+const {get, merge} = pkg;
 import {User, getUserById} from '../models/User.js';
 import { createCompanyUser, getCompanyAllUsersByCompanyId, getCompaniesByUserId, deleteCompanyUserById } from '../models/CompanyUsers.js';
 import { getCompanyById } from '../models/Company.js';

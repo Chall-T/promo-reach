@@ -5,12 +5,13 @@ import { ResponsiveLine } from "@nivo/line";
 import { useGetSalesQuery } from "state/api";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import  { Navigate } from 'react-router-dom';
 
 const Daily = () => {
+  const theme = useTheme();
   const [startDate, setStartDate] = useState(new Date("2021-02-01"));
   const [endDate, setEndDate] = useState(new Date("2021-03-01"));
-  const { data } = useGetSalesQuery();
-  const theme = useTheme();
+  const { data, error } = useGetSalesQuery();
 
   const [formattedData] = useMemo(() => {
     if (!data) return [];
@@ -26,7 +27,9 @@ const Daily = () => {
       color: theme.palette.secondary[600],
       data: [],
     };
-
+    if (error){
+      return <Navigate to='/signIn'  />
+    }
     Object.values(dailyData).forEach(({ date, totalSales, totalUnits }) => {
       const dateFormatted = new Date(date);
       if (dateFormatted >= startDate && dateFormatted <= endDate) {

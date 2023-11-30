@@ -3,10 +3,11 @@ import { Box, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { ResponsiveLine } from "@nivo/line";
 import { useGetSalesQuery } from "state/api";
+import  { Navigate } from 'react-router-dom';
 
 const Monthly = () => {
-  const { data } = useGetSalesQuery();
   const theme = useTheme();
+  const { data, error } = useGetSalesQuery();
 
   const [formattedData] = useMemo(() => {
     if (!data) return [];
@@ -22,7 +23,9 @@ const Monthly = () => {
       color: theme.palette.secondary[600],
       data: [],
     };
-
+    if (error){
+      return <Navigate to='/signIn'  />
+    }
     Object.values(monthlyData).forEach(({ month, totalSales, totalUnits }) => {
       totalSalesLine.data = [
         ...totalSalesLine.data,

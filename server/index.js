@@ -11,6 +11,8 @@ import managementRoutes from "./routes/management.js";
 import salesRoutes from "./routes/sales.js";
 import authRoutes from "./routes/auth.js"
 import testRoutes from "./routes/permissionTest.js"
+import companyRoutes from "./routes/company.js"
+import cookieParser from "cookie-parser";
 // data imports
 import User from "./models/User.js";
 import { Role } from "./models/Role.js";
@@ -37,9 +39,10 @@ app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
+app.use(cookieParser())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 
 /* ROUTES */
 app.use("/client", clientRoutes);
@@ -48,6 +51,7 @@ app.use("/management", managementRoutes);
 app.use("/sales", salesRoutes);
 app.use("/auth", authRoutes);
 app.use('/test', testRoutes)
+app.use('/company', companyRoutes)
 
 /* MONGOOSE SETUP */
 export const dataRole = [
