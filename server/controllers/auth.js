@@ -118,7 +118,7 @@ export const login = async(req, res) =>{
 
 export const refreshToken = async (req, res) => {
     try{
-        const {refreshToken} = req.body;
+        const {refreshToken} = req.body || req.cookies['refreshToken'];
 
         if (!refreshToken){
             return res.status(400).json({message: "Refresh Token is required!"}).end();
@@ -147,7 +147,14 @@ export const refreshToken = async (req, res) => {
                 allowInsecureKeySizes: true,
                 expiresIn: 3600, // 1 hour
         });
-        
+        const serializedAccessToken = serialize('accessToken', newToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 60 * 60 * 24 * 30,
+            path: '/',
+        });
+        res.setHeader('Set-Cookie', serializedAccessToken);
         return res.status(200).json({
             accessToken: newToken,
             refreshToken: refreshToken
