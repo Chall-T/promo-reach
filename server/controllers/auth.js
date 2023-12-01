@@ -72,6 +72,7 @@ export const login = async(req, res) =>{
                 expiresIn: 259200 // 3 days
             }
         );
+
         const serializedAccessToken = serialize('accessToken', token, {
             httpOnly: true,
             secure: true,
@@ -79,7 +80,6 @@ export const login = async(req, res) =>{
             maxAge: 60 * 60 * 24 * 30,
             path: '/',
         });
-        res.setHeader('Set-Cookie', serializedAccessToken);
         const serializedRefreshToken = serialize('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,
@@ -87,7 +87,9 @@ export const login = async(req, res) =>{
             maxAge: 60 * 60 * 24 * 30,
             path: '/',
         });
-        res.setHeader('Set-Cookie', serializedRefreshToken);
+        
+        res.cookie('accessToken', token);
+        res.cookie('refreshToken', refreshToken);
 
         await createRefreshToken(refreshToken);
         var authorities = [];
