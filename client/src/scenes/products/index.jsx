@@ -12,8 +12,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Header from "components/Header";
-import { useGetProductsQuery } from "state/api";
-import  { Navigate } from 'react-router-dom';
+import { GetProductsQuery } from "state/api";
 
 const Product = ({
   _id,
@@ -87,11 +86,8 @@ const Product = ({
 };
 
 const Products = () => {
-  const { data, isLoading, error } = useGetProductsQuery();
+  const { data, isLoading, error } = GetProductsQuery();
   const isNonMobile = useMediaQuery("(min-width: 1000px)");
-  if (error){
-    return <Navigate to='/signIn'  />
-  }
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -108,7 +104,7 @@ const Products = () => {
             "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
           }}
         >
-          {data.map(
+          {!error ? data.map(
             ({
               _id,
               name,
@@ -131,7 +127,7 @@ const Products = () => {
                 stat={stat}
               />
             )
-          )}
+          ):console.log(error) }
         </Box>
       ) : (
         <>Loading...</>

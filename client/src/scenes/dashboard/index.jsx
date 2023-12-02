@@ -1,7 +1,6 @@
 import React from "react";
 import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
-import  { Navigate } from 'react-router-dom';
 import {
   DownloadOutlined,
   Email,
@@ -19,16 +18,14 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import BreakdownChart from "components/BreakdownChart";
 import OverviewChart from "components/OverviewChart";
-import { useGetDashboardQuery } from "state/api";
+import { GetDashboardQuery } from "state/api";
 import StatBox from "components/StatBox";
 
 const Dashboard = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data, isLoading, error } = useGetDashboardQuery();
-  if (error){
-    return <Navigate to='/signIn'  />
-  }
+  const { data, isLoading } = GetDashboardQuery();
+
 
   const columns = [
     {

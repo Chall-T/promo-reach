@@ -3,7 +3,7 @@ import { Container, Button, Link, Typography, Box, Grid, TextField, useTheme } f
 import Avatar from '@mui/material/Avatar';
 import * as yup from "yup";
 import { Formik } from "formik";
-import { useSignInQuery } from "state/api";
+import { SignInQuery } from "state/api";
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
@@ -22,10 +22,7 @@ const SignIn = () => {
     const theme = useTheme();
 
     const [data, setData] = useState()
-    const signInUserData = useSignInQuery(data)
-    if (signInUserData.data){
-        console.log(signInUserData.data);
-    }
+    SignInQuery(data)
 
     return (
     <Container>
@@ -66,6 +63,7 @@ const SignIn = () => {
                             id="email"
                             label="Email Address"
                             name="email"
+                            type="email"
                             autoComplete="email"
                             sx={{
                                 "& .Mui-focused":{
@@ -88,7 +86,7 @@ const SignIn = () => {
                             label="Password"
                             type="password"
                             id="password"
-                            autoComplete="new-password"
+                            autoComplete="password"
                             sx={{
                                 "& .Mui-focused":{
                                     color: `${theme.palette.text.main} !important`

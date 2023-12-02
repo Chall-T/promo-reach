@@ -11,7 +11,7 @@ export const checkDuplicateEmail = (req, res, next) => {
         }
 
         if (user) {
-            return res.status(400).send({ message: "Failed! Email is already in use!" });
+            return res.status(400).send({ message:"Failed!", email: "Email is already taken." });
         }
 
         next();

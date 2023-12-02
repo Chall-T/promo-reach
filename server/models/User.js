@@ -8,6 +8,11 @@ const UserSchema = new mongoose.Schema(
       min: 2,
       max: 100,
     },
+    lastName: {
+      type: String,
+      min: 2,
+      max: 100,
+    },
     email: {
       type: String,
       required: [true, 'Please enter a valid email'],

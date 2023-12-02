@@ -1,0 +1,249 @@
+import React from "react";
+import { Container, Button, Link, Typography, Box, Grid, TextField, Checkbox, FormControlLabel, useTheme } from "@mui/material";
+import Avatar from '@mui/material/Avatar';
+import * as yup from "yup";
+import { Formik , useFormik} from "formik";
+import { useDispatch } from "react-redux";
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { api } from "state/api";
+
+const mainFormInitialValues = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    terms: false
+}
+
+const userSchema = yup.object().shape({
+    firstName: yup.string().required("required").min(2),
+    lastName: yup.string().required("required").min(2),
+    email: yup.string().email("invalid email").required("required").max(50),
+    password: yup.string().required("required").min(8),
+    terms: yup.bool().oneOf([true], 'Accept Terms & Conditions is required')
+})
+
+
+  
+const SignUp = () => {
+    const theme = useTheme();
+    // The output of the form
+    const [result, setResult] = React.useState({});
+  
+    const [initialValues, setInitialValues] = React.useState(
+      mainFormInitialValues
+    );
+    const [validation, setValidation] = React.useState();
+  
+    // Just save the output of the form to be
+    const onSubmit = (values) => setResult(values);
+  
+    // Define the formik hook
+    const formik = useFormik({
+      initialValues,
+      validationSchema: validation,
+      onSubmit: (values) => onSubmit(values),
+      validateOnBlur: true,
+    });
+  
+    // Destructure the formik bag
+    const {
+      values,
+      errors,
+      touched,
+      handleChange,
+      handleSubmit,
+      validateForm,
+      handleBlur,
+    } = formik;
+  
+    // Any time we dynamically change the validation schema revalidate the
+    // form
+    React.useEffect(() => {
+      validateForm();
+    }, [validation]);
+  
+    // If a dynamic form changes then handle the update of the initial values
+    // and validation schema here
+    const handleFormChange = (formDetails) => {
+      // Set the intitial values and validation schema based on the form change
+      setInitialValues({ ...initialValues, ...formDetails.values });
+      const newSchema = validation.shape(formDetails.validation);
+      setValidation(userSchema);
+    };
+  
+    return (
+    //   <ScrollView>
+    //     <View style={styles.container}>
+    //       <Input
+    //         style={styles.input}
+    //         placeholder="name"
+    //         onChangeText={handleChange("name")}
+    //         onBlur={handleBlur("name")}
+    //         value={values.name}
+    //         error={errors.name}
+    //         touched={touched.name}
+    //       />
+    //       <OtherForm
+    //         formik={formik}
+    //         onChangeForm={(formDetails) =>
+    //           handleFormChange(formDetails)
+    //         }
+    //       />
+    //     </View>
+    //   </ScrollView>
+    <Container>
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign up
+                    </Typography>
+            <Box sx={{mt:3}}>
+            <form 
+                onSubmit={handleSubmit} 
+                formik={formik} 
+                onChangeForm={(formDetails) =>
+                    handleFormChange(formDetails)
+                }
+            >
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.firstName}
+                    error={!!touched.firstName && !!errors.firstName}
+                    helperText={touched.firstName && errors.firstName}
+                    autoComplete="given-name"
+                    name="firstName"
+                    required
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    autoFocus
+                    sx={{
+                        "& .Mui-focused":{
+                            color: `${theme.palette.text.main} !important`
+                        }
+                        
+                    }}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.lastName}
+                    error={!!touched.lastName && !!errors.lastName}
+                    helperText={touched.lastName && errors.lastName}
+                    required
+                    fullWidth
+                    id="lastName"
+                    label="Last Name"
+                    name="lastName"
+                    autoComplete="family-name"
+                    sx={{
+                        "& .Mui-focused":{
+                            color: `${theme.palette.text.main} !important`
+                        }
+                        
+                    }}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.email}
+                    error={!!touched.email && !!errors.email}
+                    helperText={touched.email && errors.email}
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    sx={{
+                        "& .Mui-focused":{
+                            color: `${theme.palette.text.main} !important`
+                        }
+                        
+                    }}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.password}
+                    error={!!touched.password && !!errors.password}
+                    helperText={touched.password && errors.password}
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="new-password"
+                    sx={{
+                        "& .Mui-focused":{
+                            color: `${theme.palette.text.main} !important`
+                        }
+                        
+                    }}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                <FormControlLabel
+                    control={<Checkbox 
+                        checked={values.terms} 
+                        color="secondary" 
+                        required
+                        name="terms"
+                        id="terms"
+                        />}
+                    label="I accept the Terms & Conditions."
+                    
+                    color="secondary" 
+                    onChange={handleChange}
+                    />
+                </Grid>
+                </Grid>
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                >
+                Sign Up
+                </Button>
+                <Grid container justifyContent="flex-end">
+                <Grid item>
+                    <Link 
+                    href="/signIn" 
+                    variant="body2"
+                    sx={{
+                        color: `${theme.palette.text.main} !important`
+                    }}>
+                    Already have an account? Sign in
+                    
+                    </Link>
+                </Grid>
+            </Grid>
+            </form>
+            </Box>
+        </Box>
+    </Container>
+    );
+  }
+
+  export default SignUp;

@@ -1,17 +1,13 @@
 import React from "react";
 import { Box, useTheme } from "@mui/material";
-import { useGetGeographyQuery } from "state/api";
+import { GetGeographyQuery } from "state/api";
 import Header from "components/Header";
 import { ResponsiveChoropleth } from "@nivo/geo";
 import { geoData } from "state/geoData";
-import  { Navigate } from 'react-router-dom';
 
 const Geography = () => {
   const theme = useTheme();
-  const { data, error } = useGetGeographyQuery();
-  if (error){
-    return <Navigate to='/signIn'  />
-  }
+  const { data } = GetGeographyQuery();
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="GEOGRAPHY" subtitle="Find where your users are located." />

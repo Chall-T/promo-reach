@@ -1,19 +1,16 @@
 import React from "react";
 import { Box, useTheme } from "@mui/material";
-import { useGetUserPerformanceQuery } from "state/api";
+import { GetUserPerformanceQuery } from "state/api";
 import { useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "components/Header";
 import CustomColumnMenu from "components/DataGridCustomColumnMenu";
-import  { Navigate } from 'react-router-dom';
 
 const Performance = () => {
   const theme = useTheme();
   const userId = useSelector((state) => state.global.userId);
-  const { data, isLoading, error } = useGetUserPerformanceQuery(userId);
-  if (error){
-    return <Navigate to='/signIn'  />
-  }
+  const { data, isLoading } = GetUserPerformanceQuery(userId);
+
   const columns = [
     {
       field: "_id",

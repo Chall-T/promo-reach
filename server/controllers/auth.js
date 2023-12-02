@@ -9,22 +9,26 @@ import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie';
 
 
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
     try{
-        const {email, password, name} = req.body;
+        const {email, password, name, lastName, terms} = req.body;
 
         if (!email || !password || !name){
             return res.status(400).json({message: "Missing data"}).end();
         }
+
+        if (!terms) return res.status(400).json({message: "Accepting the terms is required!"})
+
         const existingUser = await getUserByEmail(email);
         if (existingUser){
-            return res.status(400).json({message: "User exists"}).end();
+            return res.status(400).json({message: "User exists", email: "Email address taken"}).end();
         }
 
         const salt = random();
         const user = await createUser({
             email,
             name,
+            lastName,
             authentication:{
                 salt,
                 password: authentication(salt, password),
@@ -33,7 +37,7 @@ export const register = async (req, res) => {
                 await getRoleByName('user')
             ]
         });
-        return res.status(200).json(user).end();
+        next();
     }catch (error){
         console.log(error);
         return res.sendStatus(400);
@@ -69,7 +73,7 @@ export const login = async(req, res) =>{
             { id: user.id }, 
             process.env.SECRET, 
             { 
-                expiresIn: 259200 // 3 days
+                expiresIn: 604800 // 7 days
             }
         );
 

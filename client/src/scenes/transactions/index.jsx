@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Box, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { useGetTransactionsQuery } from "state/api";
+import { GetTransactionsQuery } from "state/api";
 import Header from "components/Header";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
-import  { Navigate } from 'react-router-dom';
 
 const Transactions = () => {
   const theme = useTheme();
@@ -16,15 +15,13 @@ const Transactions = () => {
   const [search, setSearch] = useState("");
 
   const [searchInput, setSearchInput] = useState("");
-  const { data, isLoading, error } = useGetTransactionsQuery({
+  const { data, isLoading } = GetTransactionsQuery({
     page,
     pageSize,
     sort: JSON.stringify(sort),
     search,
   });
-  if (error){
-    return <Navigate to='/signIn'  />
-  }
+
   const columns = [
     {
       field: "_id",

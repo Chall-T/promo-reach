@@ -7,7 +7,7 @@ import { verifyToken } from "../middlewares/authJwt.js";
 const router = express.Router();
 
 router.post("/login", login);
-router.post("/register", checkDuplicateEmail, register);
+router.post("/register", checkDuplicateEmail, register, login);
 router.post("/refreshToken", verifyToken, refreshToken);
 router.post("/logout", logOut);
 

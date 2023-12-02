@@ -3,9 +3,9 @@ import { Container, Button, Link, Typography, Box, Grid, TextField, Checkbox, Fo
 import Avatar from '@mui/material/Avatar';
 import * as yup from "yup";
 import { Formik } from "formik";
-
+import { useDispatch } from "react-redux";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-
+import { api } from "state/api";
 const initialValues = {
     firstName: "",
     lastName: "",
@@ -23,12 +23,28 @@ const userSchema = yup.object().shape({
 })
 
 const SignUp = () => {
+    // const [validation, setValidation] = React.useState();
+    // setValidation(userSchema)
+    
+    const triedEmails = []
     const theme = useTheme();
-
+    const dispatch = useDispatch();
     const handleFormSubmit = (values) => {
-        console.log(values)
+        const result = dispatch(api.endpoints.signUp.initiate(values))
+            .unwrap()
+            .then((payload) => {
+                console.log('fulfilled', payload)
+                window.location.href = "/Dashboard";
+            })
+            .catch((error) => {
+                if (error.data.email){
+                    triedEmails.push(values.email);
+                    console.log(error.data.email)
+                    userSchema.email = yup.string().email("invalid email").notOneOf(triedEmails, error.data.email).required("required").max(50)
+                }
+                console.error('rejected', error, values.email)
+            })
     }
-
     return (
     <Container>
         <Box
@@ -146,13 +162,11 @@ const SignUp = () => {
                                 checked={values.terms} 
                                 color="secondary" 
                                 required
+                                name="terms"
+                                id="terms"
                                 />}
-                            onBlur={handleBlur}
-                            error={!!touched.terms && !!errors.terms}
-                            helperText={touched.terms && errors.terms}
                             label="I accept the Terms & Conditions."
-                            name="terms"
-                            id="terms"
+                            
                             color="secondary" 
                             onChange={handleChange}
                             />
