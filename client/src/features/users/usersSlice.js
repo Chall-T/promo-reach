@@ -13,7 +13,8 @@ export const userSlice = createSlice({
     loading: 'idle',
     error: null,
   },
-  reducers: {},
+  reducers: {
+  },
   extraReducers: {
     [Login.rejected]: (state, action) => {
         state.status = 'rejected';

@@ -1,15 +1,31 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // import  { Navigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 
+const baseQueryWithReauth = (baseQuery) => async (args, apiRequest, extraOptions) => {
+  let result = await baseQuery(args, apiRequest, extraOptions)
+  
+  useEffect(()=>{
+    if (result.error && result.error.status === 401 || result.error.status === 403) {
+      
+      const result = GetTokenQuery()
+    }
+  }, [])
+  
+  return result
+}
+
+const adminApiBaseQuery = fetchBaseQuery({ 
+  baseUrl: process.env.REACT_APP_BASE_URL, 
+  credentials: 'include', 
+  onError: (error) => {
+    console.log('An error occurred:', error);
+  },
+})
 
 export const api = createApi({
-  baseQuery: fetchBaseQuery({ 
-    baseUrl: process.env.REACT_APP_BASE_URL, 
-    credentials: 'include', 
-    onError: (error) => {
-      console.log('An error occurred:', error);
-    },
-  }),
+  baseQuery: baseQueryWithReauth(adminApiBaseQuery),
   reducerPath: "adminApi",
   tagTypes: [
     "User",
@@ -21,6 +37,8 @@ export const api = createApi({
     "Admins",
     "Performance",
     "Dashboard",
+    "LogOut",
+    "Token"
   ],
   endpoints: (build) => ({
     signIn:  build.query({
@@ -51,6 +69,10 @@ export const api = createApi({
     logOut: build.query({
       query: () => ({url: "/auth/logout", method: "POST",}),
       providesTags: ["LogOut"],
+    }),
+    getToken: build.query({
+      query: () => ({url: "/auth/refreshToken", method: "POST",}),
+      providesTags: ["Token"],
     }),
     getUser: build.query({
       query: (id) => `general/user/${id}`,
@@ -98,6 +120,7 @@ export const api = createApi({
 export const {
   useSignInQuery,
   useLogOutQuery,
+  useGetTokenQuery,
   useGetUserQuery,
   useGetProductsQuery,
   useGetCustomersQuery,
@@ -110,6 +133,7 @@ export const {
 } = api;
 
 function HandleNotAuthorized(error){
+  return 0;
   console.log(error)
   if(!error) return;
   if(error.status){
@@ -125,6 +149,11 @@ export const SignInQuery = (value) =>{
   HandleNotAuthorized(result.error)
   if (!result.data) return result;
   window.location.href ="/dashboard";
+}
+export const GetTokenQuery = (value) =>{
+  const result = useGetTokenQuery(value)
+  HandleNotAuthorized(result.error)
+  return result;
 }
 export const GetProductsQuery = () =>{
   const result = useGetProductsQuery()
