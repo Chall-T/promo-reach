@@ -67,7 +67,7 @@ export const login = async(req, res) =>{
             {
                 algorithm: 'HS256',
                 allowInsecureKeySizes: true,
-                expiresIn: 3600, // 1 hour
+                expiresIn: 5, // 1 hour
         });
         const refreshToken = jwt.sign(
             { id: user.id }, 
