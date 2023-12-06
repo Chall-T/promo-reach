@@ -90,5 +90,5 @@ export const logOut = async (req, res) => {
     let sessionToken = req.headers.authorization ? req.headers.authorization.split(" ")[1] : undefined || req.cookies['authToken'];
     await deleteSession(sessionToken)
     res.clearCookie("authToken");
-    return res.sendStatus(200);
+    return res.status(200).json({message: "OK"}).end();
 };
