@@ -1,16 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // import  { Navigate } from 'react-router-dom';
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import  { Navigate } from 'react-router-dom';
 
 const baseQueryWithReauth = (baseQuery) => async (args, apiRequest, extraOptions) => {
   let result = await baseQuery(args, apiRequest, extraOptions)
   if (!result.error) return result
   
   const status = result.error.status || result.error.originalStatus
-  if (result.error && status === 401 || status === 403) {
-      
+  if ((result.error && status === 401) || (result.error && status === 403)) {
+    localStorage.setItem('logged_user', JSON.stringify(false));
       window.location.href ="/signIn";
   }
   

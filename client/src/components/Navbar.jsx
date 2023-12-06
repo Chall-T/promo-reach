@@ -11,7 +11,6 @@ import FlexBetween from "components/FlexBetween";
 import { useDispatch } from "react-redux";
 import { setMode } from "state";
 import profileImage from "assets/profile.jpeg";
-import  { Navigate } from 'react-router-dom';
 import {
   AppBar,
   Button,
@@ -25,9 +24,8 @@ import {
   useTheme,
 } from "@mui/material";
 import { api } from "state/api";
-import { unstable_HistoryRouter, Route } from 'react-router-dom';
 
-const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen, logOut }) => {
+const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
 
@@ -36,8 +34,11 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen, logOut }) => {
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
   const handleLogOut = () => {
-    dispatch(api.endpoints.logOut.initiate());
-    logOut()
+    dispatch(api.endpoints.logOut.initiate()).unwrap().then((payload) => {
+        if(payload.message === 'OK'){
+          window.location.href ="/signIn";
+        }
+    });
   }
   return (
     <AppBar

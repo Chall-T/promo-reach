@@ -2,13 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import { configureStore, applyMiddleware } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import globalReducer from "state";
 import { Provider } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { api } from "state/api";
 import userReducer from "features/users/usersSlice";
-
 const store = configureStore({
   reducer: {
     global: globalReducer,

@@ -30,7 +30,7 @@ const SignUp = () => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const handleFormSubmit = (values) => {
-        const result = dispatch(api.endpoints.signUp.initiate(values))
+        dispatch(api.endpoints.signUp.initiate(values))
             .unwrap()
             .then((payload) => {
                 console.log('fulfilled', payload)
