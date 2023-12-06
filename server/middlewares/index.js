@@ -2,18 +2,18 @@ import express from 'express';
 import pkg from 'lodash';
 const {get, merge} = pkg;
 import { getCompaniesByUserId } from '../models/CompanyUsers.js';
+import { getUserBySessionToken } from '../models/Session.js'
 
 
 export const isAuthenticated = async(req, res, next) =>{
     try{
-        let sessionToken = req.cookies['NEO-AUTH'] || req.headers.authorization.split(" ")[1];
+        const sessionToken = req.headers.authorization ? req.headers.authorization.split(" ")[1] : undefined || req.cookies['authToken'];
         if (!sessionToken){
-            return res.sendStatus(403);
+            return res.status(401).json({message: "Missing SessionId!"}).end();
         }
         const existingUser = await getUserBySessionToken(sessionToken);
-
         if (!existingUser){
-            return res.sendStatus(403);
+            return res.status(403).json({message: "Invalid SessionId!"}).end();
         }
         merge(req, {identity: existingUser});
 
@@ -26,11 +26,13 @@ export const isAuthenticated = async(req, res, next) =>{
 
 export const isInCompany = async(req, res, next) =>{
     try{
-        let token = req.headers["x-access-token"];
+        const currentUserId = get(req, 'identity._id');
         const { companyId } = req.params;
         
-        const { id, exp } = jwt.decode(token);
-        const companies = await getCompaniesByUserId(id);
+        if (!currentUserId){
+            return res.sendStatus(403);
+        }
+        const companies = await getCompaniesByUserId(currentUserId);
 
         for (let i = 0; i < companies.length; i++) {
             if (companyId == companies[i]._id){

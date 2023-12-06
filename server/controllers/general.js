@@ -1,10 +1,12 @@
 import User from "../models/User.js";
 import OverallStat from "../models/OverallStat.js";
 import Transaction from "../models/Transaction.js";
+import pkg from 'lodash';
+const {get} = pkg;
 
 export const getUser = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = get(req, 'identity._id');
     const user = await User.findById(id);
     res.status(200).json(user);
   } catch (error) {

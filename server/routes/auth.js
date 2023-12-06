@@ -1,14 +1,13 @@
 import express from "express";
 
-import { login, register, refreshToken, logOut } from "../controllers/auth.js";
+import { login, register, logOut } from "../controllers/auth.js";
 import { checkDuplicateEmail } from "../middlewares/SignUp.js";
-import { verifyToken } from "../middlewares/authJwt.js";
+import { isAuthenticated } from "../middlewares/index.js";
   
 const router = express.Router();
 
 router.post("/login", login);
 router.post("/register", checkDuplicateEmail, register, login);
-router.post("/refreshToken", verifyToken, refreshToken);
-router.post("/logout", logOut);
+router.post("/logout", isAuthenticated, logOut);
 
 export default router;

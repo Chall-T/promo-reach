@@ -10,7 +10,6 @@ import generalRoutes from "./routes/general.js";
 import managementRoutes from "./routes/management.js";
 import salesRoutes from "./routes/sales.js";
 import authRoutes from "./routes/auth.js"
-import testRoutes from "./routes/permissionTest.js"
 import companyRoutes from "./routes/company.js"
 import cookieParser from "cookie-parser";
 // data imports
@@ -50,7 +49,6 @@ app.use("/general", generalRoutes);
 app.use("/management", managementRoutes);
 app.use("/sales", salesRoutes);
 app.use("/auth", authRoutes);
-app.use('/test', testRoutes)
 app.use('/company', companyRoutes)
 
 /* MONGOOSE SETUP */

@@ -6,11 +6,11 @@ import Navbar from "components/Navbar";
 import Sidebar from "components/Sidebar";
 import { GetUserQuery } from "state/api";
 
-const Layout = () => {
+const Layout = ({logOut}) => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const userId = useSelector((state) => state.global.userId);
-  const { data } = GetUserQuery(userId);
+  const { data } = GetUserQuery();
 
   return (
     <Box display={isNonMobile ? "flex" : "block"} width="100%" height="100%">
@@ -26,6 +26,7 @@ const Layout = () => {
           user={data || {}}
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
+          logOut={logOut}
         />
         <Outlet />
       </Box>

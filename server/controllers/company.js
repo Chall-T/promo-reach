@@ -7,7 +7,6 @@ import {User, getUserById} from '../models/User.js';
 
 export const getCompanyInfo = async(req, res) =>{
     try{
-        const { id } = req.params;
         const company = await getCompanyById(id);
 
         return res.status(200).json(company);

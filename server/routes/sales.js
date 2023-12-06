@@ -1,8 +1,8 @@
 import express from "express";
 import { getSales } from "../controllers/sales.js";
-import { verifyToken } from "../middlewares/authJwt.js";
+import { isAuthenticated } from "../middlewares/index.js";
 const router = express.Router();
 
-router.get("/sales", verifyToken, getSales);
+router.get("/sales", isAuthenticated, getSales);
 
 export default router;

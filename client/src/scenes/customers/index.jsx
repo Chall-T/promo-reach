@@ -8,9 +8,7 @@ import  { Navigate } from 'react-router-dom';
 const Customers = () => {
   const theme = useTheme();
   const { data, isLoading, error } = useGetCustomersQuery();
-  if (error){
-    return <Navigate to='/signIn'  />
-  }
+
   console.log("data", data);
 
   const columns = [

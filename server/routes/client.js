@@ -5,12 +5,12 @@ import {
   getTransactions,
   getGeography,
 } from "../controllers/client.js";
-import { verifyToken } from "../middlewares/authJwt.js";
+import { isAuthenticated } from "../middlewares/index.js";
 const router = express.Router();
 
-router.get("/products", verifyToken, getProducts);
-router.get("/customers", verifyToken, getCustomers);
-router.get("/transactions", verifyToken, getTransactions);
-router.get("/geography", verifyToken, getGeography);
+router.get("/products", isAuthenticated, getProducts);
+router.get("/customers", isAuthenticated, getCustomers);
+router.get("/transactions", isAuthenticated, getTransactions);
+router.get("/geography", isAuthenticated, getGeography);
 
 export default router;

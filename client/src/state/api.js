@@ -2,16 +2,17 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // import  { Navigate } from 'react-router-dom';
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
+import  { Navigate } from 'react-router-dom';
 
 const baseQueryWithReauth = (baseQuery) => async (args, apiRequest, extraOptions) => {
   let result = await baseQuery(args, apiRequest, extraOptions)
+  if (!result.error) return result
   
-  useEffect(()=>{
-    if (result.error && result.error.status === 401 || result.error.status === 403) {
+  const status = result.error.status || result.error.originalStatus
+  if (result.error && status === 401 || status === 403) {
       
-      const result = GetTokenQuery()
-    }
-  }, [])
+      window.location.href ="/signIn";
+  }
   
   return result
 }
@@ -38,7 +39,6 @@ export const api = createApi({
     "Performance",
     "Dashboard",
     "LogOut",
-    "Token"
   ],
   endpoints: (build) => ({
     signIn:  build.query({
@@ -70,12 +70,8 @@ export const api = createApi({
       query: () => ({url: "/auth/logout", method: "POST",}),
       providesTags: ["LogOut"],
     }),
-    getToken: build.query({
-      query: () => ({url: "/auth/refreshToken", method: "POST",}),
-      providesTags: ["Token"],
-    }),
     getUser: build.query({
-      query: (id) => `general/user/${id}`,
+      query: () => `general/user`,
       providesTags: ["User"],
     }),
     getProducts: build.query({
@@ -120,7 +116,6 @@ export const api = createApi({
 export const {
   useSignInQuery,
   useLogOutQuery,
-  useGetTokenQuery,
   useGetUserQuery,
   useGetProductsQuery,
   useGetCustomersQuery,
@@ -132,73 +127,37 @@ export const {
   useGetDashboardQuery,
 } = api;
 
-function HandleNotAuthorized(error){
-  return 0;
-  console.log(error)
-  if(!error) return;
-  if(error.status){
-    if (error.status == 403) window.location.href ="/signIn";
-  }
-  if(error.originalStatus){
-    if (error.originalStatus == 403) window.location.href ="/signIn";
-  }
-}
-
 export const SignInQuery = (value) =>{
   const result = useSignInQuery(value)
-  HandleNotAuthorized(result.error)
   if (!result.data) return result;
   window.location.href ="/dashboard";
 }
-export const GetTokenQuery = (value) =>{
-  const result = useGetTokenQuery(value)
-  HandleNotAuthorized(result.error)
-  return result;
-}
 export const GetProductsQuery = () =>{
-  const result = useGetProductsQuery()
-  HandleNotAuthorized(result.error)
-  return result;
+  return useGetProductsQuery()
 }
 export const GetUserQuery = () =>{
-  const result = useGetUserQuery()
-  HandleNotAuthorized(result.error)
-  return result;
+  return useGetUserQuery()
 }
 export const GetCustomersQuery = () =>{
-  const result = useGetCustomersQuery()
-  HandleNotAuthorized(result.error)
-  return result;
+  return useGetCustomersQuery()
 }
 export const GetTransactionsQuery = () =>{
-  const result = useGetTransactionsQuery()
-  HandleNotAuthorized(result.error)
-  return result;
+  return useGetTransactionsQuery()
 }
 export const GetGeographyQuery = () =>{
-  const result = useGetGeographyQuery()
-  HandleNotAuthorized(result.error)
-  return result;
+  return useGetGeographyQuery()
 }
 export const GetAdminsQuery = () =>{
-  const result = useGetAdminsQuery()
-  HandleNotAuthorized(result.error)
-  return result;
+  return useGetAdminsQuery()
 }
 export const GetUserPerformanceQuery = () =>{
-  const result = useGetUserPerformanceQuery()
-  HandleNotAuthorized(result.error)
-  return result;
+  return useGetUserPerformanceQuery()
 }
 
 export const GetSalesQuery = () =>{
-  const result = useGetSalesQuery()
-  HandleNotAuthorized(result.error)
-  return result;
+  return useGetSalesQuery()
 }
 
 export const GetDashboardQuery = () =>{
-  const result = useGetDashboardQuery()
-  HandleNotAuthorized(result.error)
-  return result;
+  return useGetDashboardQuery()
 }

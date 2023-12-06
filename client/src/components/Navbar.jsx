@@ -27,7 +27,7 @@ import {
 import { api } from "state/api";
 import { unstable_HistoryRouter, Route } from 'react-router-dom';
 
-const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
+const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen, logOut }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
 
@@ -37,7 +37,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const handleClose = () => setAnchorEl(null);
   const handleLogOut = () => {
     dispatch(api.endpoints.logOut.initiate());
-    window.location.href = "/SignIn";
+    logOut()
   }
   return (
     <AppBar

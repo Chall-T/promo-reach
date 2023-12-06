@@ -8,9 +8,6 @@ import { Provider } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { api } from "state/api";
 import userReducer from "features/users/usersSlice";
-import { jwt } from "state/middleware";
-
-
 
 const store = configureStore({
   reducer: {
@@ -23,7 +20,7 @@ const store = configureStore({
 
 setupListeners(store.dispatch);
 
-const root = ReactDOM.createRoot(document.getElementById("root"), applyMiddleware(jwt));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
