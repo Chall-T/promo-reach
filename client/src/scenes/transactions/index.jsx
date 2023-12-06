@@ -13,7 +13,6 @@ const Transactions = () => {
   const [pageSize, setPageSize] = useState(20);
   const [sort, setSort] = useState({});
   const [search, setSearch] = useState("");
-
   const [searchInput, setSearchInput] = useState("");
   const { data, isLoading } = GetTransactionsQuery({
     page,
@@ -102,6 +101,7 @@ const Transactions = () => {
           componentsProps={{
             toolbar: { searchInput, setSearchInput, setSearch },
           }}
+          experimentalFeatures={{ ariaV7: true }}
         />
       </Box>
     </Box>

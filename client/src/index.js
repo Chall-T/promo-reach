@@ -8,13 +8,16 @@ import { Provider } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { api } from "state/api";
 import userReducer from "features/users/usersSlice";
+import { authSlice } from "features/users/authSlice";
+import { authMiddleware } from "state/middleware";
 const store = configureStore({
   reducer: {
     global: globalReducer,
     [api.reducerPath]: api.reducer,
-    user: userReducer
+    user: userReducer,
+    auth: authSlice.reducer
   },
-  middleware: (getDefault) => getDefault().concat(api.middleware),
+  middleware: (getDefault) => getDefault().concat([api.middleware, authMiddleware]),
 });
 
 setupListeners(store.dispatch);

@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import User from "../models/User.js";
 import Transaction from "../models/Transaction.js";
+import pkg from 'lodash';
+const {get} = pkg;
 
 export const getAdmins = async (req, res) => {
   try {
@@ -13,10 +15,9 @@ export const getAdmins = async (req, res) => {
 
 export const getUserPerformance = async (req, res) => {
   try {
-    const { id } = req.params;
-
+    const userId = get(req, 'identity._id');
     const userWithStats = await User.aggregate([
-      { $match: { _id: new mongoose.Types.ObjectId(id) } },
+      { $match: { _id: new mongoose.Types.ObjectId(userId) } },
       {
         $lookup: {
           from: "affiliatestats",
@@ -29,8 +30,8 @@ export const getUserPerformance = async (req, res) => {
     ]);
 
     const saleTransactions = await Promise.all(
-      userWithStats[0].affiliateStats.affiliateSales.map((id) => {
-        return Transaction.findById(id);
+      userWithStats[0].affiliateStats.affiliateSales.map((userId) => {
+        return Transaction.findById(userId);
       })
     );
     const filteredSaleTransactions = saleTransactions.filter(
@@ -41,6 +42,7 @@ export const getUserPerformance = async (req, res) => {
       .status(200)
       .json({ user: userWithStats[0], sales: filteredSaleTransactions });
   } catch (error) {
+    console.log(error)
     res.status(404).json({ message: error.message });
   }
 };

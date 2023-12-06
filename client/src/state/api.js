@@ -1,13 +1,19 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { setUserId } from "state";
+import { useDispatch } from "react-redux";
+import { authActions } from "features/users/authSlice";
 // import  { Navigate } from 'react-router-dom';
 
 const baseQueryWithReauth = (baseQuery) => async (args, apiRequest, extraOptions) => {
+  // const dispatch = useDispatch();
   let result = await baseQuery(args, apiRequest, extraOptions)
+  // const [logOutTriggered, setSetlogOutTriggered] = useState(false);
   if (!result.error) return result
   
   const status = result.error.status || result.error.originalStatus
   if ((result.error && status === 401) || (result.error && status === 403)) {
     localStorage.setItem('logged_user', JSON.stringify(false));
+      // authActions.logout()
       window.location.href ="/signIn";
   }
   
@@ -126,7 +132,10 @@ export const {
 
 export const SignInQuery = (value) =>{
   const result = useSignInQuery(value)
+  const dispatch = useDispatch();
   if (!result.data) return result;
+  dispatch(setUserId(result.data._id))
+  dispatch(authActions.login())
   window.location.href ="/dashboard";
 }
 export const GetProductsQuery = () =>{
@@ -138,8 +147,8 @@ export const GetUserQuery = () =>{
 export const GetCustomersQuery = () =>{
   return useGetCustomersQuery()
 }
-export const GetTransactionsQuery = () =>{
-  return useGetTransactionsQuery()
+export const GetTransactionsQuery = ({ page, pageSize, sort, search }) =>{
+  return useGetTransactionsQuery({ page, pageSize, sort, search })
 }
 export const GetGeographyQuery = () =>{
   return useGetGeographyQuery()
@@ -147,8 +156,8 @@ export const GetGeographyQuery = () =>{
 export const GetAdminsQuery = () =>{
   return useGetAdminsQuery()
 }
-export const GetUserPerformanceQuery = () =>{
-  return useGetUserPerformanceQuery()
+export const GetUserPerformanceQuery = (userId) =>{
+  return useGetUserPerformanceQuery(userId)
 }
 
 export const GetSalesQuery = () =>{

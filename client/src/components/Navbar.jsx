@@ -23,22 +23,30 @@ import {
   MenuItem,
   useTheme,
 } from "@mui/material";
+import { authActions } from "features/users/authSlice";
 import { api } from "state/api";
+
 
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [logOutTriggered, setSetlogOutTriggered] = useState(false);
+
   const isOpen = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
   const handleLogOut = () => {
     dispatch(api.endpoints.logOut.initiate()).unwrap().then((payload) => {
         if(payload.message === 'OK'){
-          window.location.href ="/signIn";
+          setSetlogOutTriggered(true)
         }
     });
+  }
+  if (logOutTriggered){
+    dispatch(authActions.logout())
+    window.location.href ="/signIn";
   }
   return (
     <AppBar

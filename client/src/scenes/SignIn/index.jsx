@@ -22,7 +22,9 @@ const SignIn = () => {
     const theme = useTheme();
 
     const [data, setData] = useState()
-    SignInQuery(data)
+
+    SignInQuery(data);
+    
 
     return (
     <Container>
