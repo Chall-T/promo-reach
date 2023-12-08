@@ -4,6 +4,7 @@ import Avatar from '@mui/material/Avatar';
 import * as yup from "yup";
 import { Formik } from "formik";
 import { SignInQuery } from "state/api";
+import  { Navigate } from 'react-router-dom';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
@@ -24,8 +25,6 @@ const SignIn = () => {
     const [data, setData] = useState()
 
     SignInQuery(data);
-    
-
     return (
     <Container>
         <Box

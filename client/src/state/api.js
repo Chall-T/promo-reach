@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setUserId } from "state";
 import { useDispatch } from "react-redux";
 import { authActions } from "features/users/authSlice";
-// import  { Navigate } from 'react-router-dom';
+import  { Navigate } from 'react-router-dom';
 
 const baseQueryWithReauth = (baseQuery) => async (args, apiRequest, extraOptions) => {
   // const dispatch = useDispatch();
@@ -14,7 +14,9 @@ const baseQueryWithReauth = (baseQuery) => async (args, apiRequest, extraOptions
   if ((result.error && status === 401) || (result.error && status === 403)) {
     localStorage.setItem('logged_user', JSON.stringify(false));
       // authActions.logout()
-      window.location.href ="/signIn";
+      if (window.location.href.indexOf("SignIn")>-1 || window.location.href.indexOf("SignUp") >-1) {
+        window.location.href ="/signIn";
+      }
   }
   
   return result
@@ -131,8 +133,13 @@ export const {
 } = api;
 
 export const SignInQuery = (value) =>{
+  const dashboardResult = useGetDashboardQuery()
   const result = useSignInQuery(value)
   const dispatch = useDispatch();
+  if (dashboardResult.data) {
+    console.log(dashboardResult.data)
+    window.location.href ="/dashboard";
+  }
   if (!result.data) return result;
   dispatch(setUserId(result.data._id))
   dispatch(authActions.login())

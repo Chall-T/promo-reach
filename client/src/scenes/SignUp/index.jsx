@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { Formik } from "formik";
 import { useDispatch } from "react-redux";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { api } from "state/api";
+import { api, GetDashboardQuery } from "state/api";
 const initialValues = {
     firstName: "",
     lastName: "",
@@ -45,6 +45,8 @@ const SignUp = () => {
                 console.error('rejected', error, values.email)
             })
     }
+    const dashboardResult = GetDashboardQuery()
+    if (dashboardResult.data) window.location.href ="/dashboard";
     return (
     <Container>
         <Box

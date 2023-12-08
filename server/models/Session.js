@@ -15,7 +15,7 @@ const SessionSchema = new mongoose.Schema(
 
 export const Session = mongoose.model("Session", SessionSchema);
 
-export const getUserBySessionToken = (sessionId) => Session.findOne({sessionId}).populate('user').then((session) => session.user.toObject());
+export const getUserBySessionToken = (sessionId) => Session.findOne({sessionId}).populate('user' ,{select: '-authorization' }).then((session) => session.user.toObject());
 
 export const createSession = (data) => new Session(data).save().then((session) => session.toObject());
 

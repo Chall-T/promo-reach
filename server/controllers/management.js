@@ -16,6 +16,7 @@ export const getAdmins = async (req, res) => {
 export const getUserPerformance = async (req, res) => {
   try {
     const userId = get(req, 'identity._id');
+    console.log(userId)
     const userWithStats = await User.aggregate([
       { $match: { _id: new mongoose.Types.ObjectId(userId) } },
       {
@@ -28,7 +29,7 @@ export const getUserPerformance = async (req, res) => {
       },
       { $unwind: "$affiliateStats" },
     ]);
-
+    console.log(userWithStats)
     const saleTransactions = await Promise.all(
       userWithStats[0].affiliateStats.affiliateSales.map((userId) => {
         return Transaction.findById(userId);
@@ -37,10 +38,11 @@ export const getUserPerformance = async (req, res) => {
     const filteredSaleTransactions = saleTransactions.filter(
       (transaction) => transaction !== null
     );
-
+    const user = JSON.parse(JSON.stringify(userWithStats[0]));
+    delete user.authentication
     res
       .status(200)
-      .json({ user: userWithStats[0], sales: filteredSaleTransactions });
+      .json({ user: user, sales: filteredSaleTransactions });
   } catch (error) {
     console.log(error)
     res.status(404).json({ message: error.message });

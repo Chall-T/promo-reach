@@ -78,7 +78,8 @@ export const login = async(req, res) =>{
         const domain = process.env.DOMAIN || 'localhost';
         res.cookie('authToken', sessionId, { domain: domain, path: '/'});
 
-
+        user = JSON.parse(JSON.stringify(user));
+        delete user.authentication
         return res.status(200).json(user).end();
     }catch (error){
         console.log(error);
