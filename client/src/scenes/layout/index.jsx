@@ -4,11 +4,13 @@ import { Outlet } from "react-router-dom";
 import Navbar from "components/Navbar";
 import Sidebar from "components/Sidebar";
 import { GetUserQuery } from "state/api";
-
+import { asyncGetUser } from "features/users/usersSlice";
+import { useDispatch } from "react-redux";
 const Layout = () => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { data } = GetUserQuery();
+  const dispatch = useDispatch();
+  const { data } = dispatch(asyncGetUser());
 
   return (
     <Box display={isNonMobile ? "flex" : "block"} width="100%" height="100%">

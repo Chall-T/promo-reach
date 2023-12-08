@@ -14,17 +14,25 @@ import {
   Typography,
   useTheme,
   useMediaQuery,
+  FormControl,
+  MenuItem,
+  InputLabel,
+  Select
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import BreakdownChart from "components/BreakdownChart";
 import OverviewChart from "components/OverviewChart";
 import { GetDashboardQuery } from "state/api";
 import StatBox from "components/StatBox";
+import { useSelector  } from 'react-redux'
+
 
 const Dashboard = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
   const { data, isLoading } = GetDashboardQuery();
+  const [companySelected, setCompanySelected] = React.useState('New company');
+  const user = useSelector(state => state.user.data);
 
 
   const columns = [
@@ -57,7 +65,28 @@ const Dashboard = () => {
       renderCell: (params) => `$${Number(params.value).toFixed(2)}`,
     },
   ];
-
+  const handleCompanySelectedChange = (event) => {
+    setCompanySelected(event.target.value)
+    console.log(`company change to: ${event.target.value}`)
+  };
+  console.log(user)
+  const renderCompanyCombobox = () => {
+    <FormControl sx={{ m: 1, minWidth: 80 }}>
+        <InputLabel id="demo-simple-select-autowidth-label">Age</InputLabel>
+        <Select
+          labelId="demo-simple-select-autowidth-label"
+          id="demo-simple-select-autowidth"
+          value={companySelected}
+          onChange={handleCompanySelectedChange}
+          autoWidth
+          label="Age"
+        >
+          <MenuItem value={'New company'}>Twenty</MenuItem>
+          <MenuItem value={'New company'}>Twenty one</MenuItem>
+          <MenuItem value={'New company'}>New company</MenuItem>
+        </Select>
+      </FormControl>
+  }
   return (
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
