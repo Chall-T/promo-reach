@@ -37,7 +37,7 @@ import AddIcon from '@mui/icons-material/Add';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import CompanyCreateForm from "./CompanyCreateForm";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllJoinedCompanies } from "features/companies/companySlice";
+import { getAllJoinedCompanies, setLastCompanySelected } from "features/companies/companySlice";
 const navItems = [
   {
     text: null,
@@ -116,13 +116,21 @@ const Sidebar = ({
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [selectedCompany, setselectedCompany] = useState(0);
   const open = Boolean(anchorEl);
   const [openCompanyCreateForm, setOpenCompanyCreateForm] = useState(false);
+  const lastSelectedCompany = useSelector((state) => state.company.data.lastSelectedCompany);
   useEffect(() => {
-    dispatch(getAllJoinedCompanies()).unwrap()
+    dispatch(getAllJoinedCompanies()).unwrap().then((payload)=>{
+      if(payload && payload.message === 'OK'){
+        payload.data.companies.forEach((company, index) => {
+          if (lastSelectedCompany && company._id === lastSelectedCompany){
+            setSelectedIndex(index)
+          }
+        })
+      }
+    })
   }, []);
-  const companies = useSelector((state) => state.company.data.companies);
+  const companyData = useSelector((state) => state.company.data);
   
   useEffect(() => {
     setActive(pathname.substring(1));
@@ -137,18 +145,24 @@ const Sidebar = ({
   };
 
   const handleMenuItemClick = (event, index, elementList) => {
-    console.log(index)
+    
     setSelectedIndex(index);
     setAnchorEl(null);
+    console.log(companyData.companies)
+    if (index !== (elementList.length-1)) {
+      dispatch(setLastCompanySelected(companyData.companies[index]._id));
+
+    }
     if (index === (elementList.length-1)) {
       setOpenCompanyCreateForm(true)
     }
+
   };
 
   const companiesElementList = []
-  if (JSON.stringify(companies) !== '[]'){
+  if (JSON.stringify(companyData.companies) !== '[]'){
     // setselectedCompany(1)
-    companies.forEach((company, index) => {
+    companyData.companies.forEach((company, index) => {
     companiesElementList.push(<MenuItem key={index} selected={index === selectedIndex} onClick={(event) => handleMenuItemClick(event, index, companiesElementList)} sx={{width: "100%", paddingLeft: "1rem !important", bgcolor: "transparent"}}><StorefrontIcon sx={{mr: "1rem"}}/> {company.name}</MenuItem>)
     }
     )
@@ -159,7 +173,7 @@ const Sidebar = ({
       
       <ListItem width="100%" disablePadding sx={{bgcolor: "transparent"}} key="selectedCompany">
         
-        <CompanyCreateForm openCompanyCreateForm={openCompanyCreateForm} setOpenCompanyCreateForm={setOpenCompanyCreateForm} setselectedCompany={setselectedCompany}/>
+        <CompanyCreateForm openCompanyCreateForm={openCompanyCreateForm} setOpenCompanyCreateForm={setOpenCompanyCreateForm} />
         
         <ListItemButton
           id="lock-button"

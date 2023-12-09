@@ -22,7 +22,7 @@ const initialValues = {
     companyName: "",
 }
 
-const CompanyCreateForm = ({openCompanyCreateForm, setOpenCompanyCreateForm, setselectedCompany}) => {
+const CompanyCreateForm = ({openCompanyCreateForm, setOpenCompanyCreateForm}) => {
     const theme = useTheme();
     const [formSubmitted, setFormSubmitted] = useState(false);
     const dispatch = useDispatch();
