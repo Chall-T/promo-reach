@@ -105,10 +105,7 @@ const navItems = [
     icon: <TrendingUpOutlined />,
   },
 ];
-const companiesIconList = [
-  <AddIcon/>,
-  <StorefrontIcon/>
-]
+
 const Sidebar = ({
   user,
   drawerWidth,
@@ -122,7 +119,6 @@ const Sidebar = ({
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [companySelected, setCompanySelected] = React.useState(0);
   const open = Boolean(anchorEl);
 
 
@@ -153,9 +149,8 @@ const Sidebar = ({
   companiesElementList.push(<MenuItem key={"New company"} selected={0 === selectedIndex} onClick={(event) => handleMenuItemClick(event, 0)} sx={{width: "100%", paddingLeft: "1rem !important", bgcolor: "transparent"}}><AddIcon sx={{mr: "1rem" }}/> New company</MenuItem>)
   const renderCompanyCombobox = () => {
     return (
-      <ListItem width="100%" disablePadding sx={{bgcolor: "transparent"}}>
-        <Box
-          button
+      <ListItem width="100%" disablePadding sx={{bgcolor: "transparent"}} key="selectedCompany">
+        <ListItemButton
           id="lock-button"
           aria-haspopup="listbox"
           aria-controls="lock-menu"
@@ -165,24 +160,26 @@ const Sidebar = ({
             bgcolor: "transparent",
             width: "100vw",
             height: "3rem",
-            display: "flex",
             mb: "2rem"
           }}
           width="100%"
         >
-          {companiesElementList[selectedIndex]}
-        </Box>
+          <Box sx={{
+            width: "100%", 
+            paddingLeft: "1rem !important", 
+            bgcolor: "transparent",
+            display: "flex",
+            alignItems: "center"
+          }}>{companiesElementList[selectedIndex].props.children}</Box>
+          
+        </ListItemButton>
       <Menu
       id="lock-menu"
       anchorEl={anchorEl}
       open={open}
       onClose={handleClose}
       MenuListProps={{
-        'aria-labelledby': 'lock-button',
         role: 'listbox',
-      }}
-      sx={{
-        width: "100%"
       }}
     >
       {companiesElementList}
