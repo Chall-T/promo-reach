@@ -48,7 +48,7 @@ export const register = async (req, res, next) => {
 export const login = async(req, res) =>{
     try{
         const {email, password} = req.body;
-        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+        const ip = req.socket.remoteAddress || req.headers['x-forwarded-for'];
         const userAgent = req.get('User-Agent');
         if (!ip || !userAgent){
             return res.status(500).json({message: "Couldn't find ip or User-Agent"}).end();

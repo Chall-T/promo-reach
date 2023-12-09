@@ -11,6 +11,12 @@ import {
   ListItemText,
   Typography,
   useTheme,
+  Menu
+} from "@mui/material";
+import {
+  FormControl,
+  MenuItem,
+  InputLabel
 } from "@mui/material";
 import {
   SettingsOutlined,
@@ -32,8 +38,16 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import profileImage from "assets/profile.jpeg";
-
+import AddIcon from '@mui/icons-material/Add';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import { useSelector  } from 'react-redux'
+import Select from '@mui/material/Select';
 const navItems = [
+  {
+    text: null,
+    icon: null,
+    type: "companies"
+  },
   {
     text: "Dashboard",
     icon: <HomeOutlined />,
@@ -91,7 +105,10 @@ const navItems = [
     icon: <TrendingUpOutlined />,
   },
 ];
-
+const companiesIconList = [
+  <AddIcon/>,
+  <StorefrontIcon/>
+]
 const Sidebar = ({
   user,
   drawerWidth,
@@ -103,10 +120,76 @@ const Sidebar = ({
   const [active, setActive] = useState("");
   const navigate = useNavigate();
   const theme = useTheme();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [companySelected, setCompanySelected] = React.useState(0);
+  const open = Boolean(anchorEl);
+
 
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClickListItem = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuItemClick = (event, index) => {
+    setSelectedIndex(index);
+    setAnchorEl(null);
+  };
+  const companiesElementList = []
+  
+  if (JSON.stringify(user) != '{}'){
+    user.companies.forEach((company, index) => {
+    companiesElementList.push(<MenuItem key={company.name} selected={index+1 === selectedIndex} onClick={(event) => handleMenuItemClick(event, index+1)} sx={{width: "100%", paddingLeft: "1rem !important", bgcolor: "transparent"}}><StorefrontIcon sx={{mr: "1rem"}}/> {company.name}</MenuItem>)
+    }
+    )
+  }
+  companiesElementList.push(<MenuItem key={"New company"} selected={0 === selectedIndex} onClick={(event) => handleMenuItemClick(event, 0)} sx={{width: "100%", paddingLeft: "1rem !important", bgcolor: "transparent"}}><AddIcon sx={{mr: "1rem" }}/> New company</MenuItem>)
+  const renderCompanyCombobox = () => {
+    return (
+      <ListItem width="100%" disablePadding sx={{bgcolor: "transparent"}}>
+        <Box
+          button
+          id="lock-button"
+          aria-haspopup="listbox"
+          aria-controls="lock-menu"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleClickListItem}
+          sx={{ 
+            bgcolor: "transparent",
+            width: "100vw",
+            height: "3rem",
+            display: "flex",
+            mb: "2rem"
+          }}
+          width="100%"
+        >
+          {companiesElementList[selectedIndex]}
+        </Box>
+      <Menu
+      id="lock-menu"
+      anchorEl={anchorEl}
+      open={open}
+      onClose={handleClose}
+      MenuListProps={{
+        'aria-labelledby': 'lock-button',
+        role: 'listbox',
+      }}
+      sx={{
+        width: "100%"
+      }}
+    >
+      {companiesElementList}
+    </Menu>
+    </ListItem>
+    )
+  }
 
   return (
     <Box component="nav">
@@ -143,7 +226,14 @@ const Sidebar = ({
               </FlexBetween>
             </Box>
             <List>
-              {navItems.map(({ text, icon }) => {
+              {navItems.map(({ text, icon, type }) => {
+
+                if (!text && type == "companies"){
+                  return (
+                    renderCompanyCombobox()
+                  )
+                }
+
                 if (!icon) {
                   return (
                     <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
@@ -152,7 +242,7 @@ const Sidebar = ({
                   );
                 }
                 const lcText = text.toLowerCase();
-
+                
                 return (
                   <ListItem key={text} disablePadding>
                     <ListItemButton
