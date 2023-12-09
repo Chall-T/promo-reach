@@ -3,7 +3,6 @@ import { Box, useMediaQuery } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Navbar from "components/Navbar";
 import Sidebar from "components/Sidebar";
-import { GetUserQuery } from "state/api";
 import { asyncGetUser } from "features/users/usersSlice";
 import { useDispatch } from "react-redux";
 const Layout = () => {

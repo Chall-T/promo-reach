@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Divider,
@@ -11,12 +10,8 @@ import {
   ListItemText,
   Typography,
   useTheme,
-  Menu
-} from "@mui/material";
-import {
-  FormControl,
-  MenuItem,
-  InputLabel
+  Menu,
+  MenuItem
 } from "@mui/material";
 import {
   SettingsOutlined,
@@ -40,8 +35,9 @@ import FlexBetween from "./FlexBetween";
 import profileImage from "assets/profile.jpeg";
 import AddIcon from '@mui/icons-material/Add';
 import StorefrontIcon from '@mui/icons-material/Storefront';
-import { useSelector  } from 'react-redux'
-import Select from '@mui/material/Select';
+import CompanyCreateForm from "./CompanyCreateForm";
+import { useSelector, useDispatch } from "react-redux";
+import { getAllJoinedCompanies } from "features/companies/companySlice";
 const navItems = [
   {
     text: null,
@@ -116,12 +112,18 @@ const Sidebar = ({
   const { pathname } = useLocation();
   const [active, setActive] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const theme = useTheme();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedCompany, setselectedCompany] = useState(0);
   const open = Boolean(anchorEl);
-
-
+  const [openCompanyCreateForm, setOpenCompanyCreateForm] = useState(false);
+  useEffect(() => {
+    dispatch(getAllJoinedCompanies()).unwrap()
+  }, []);
+  const companies = useSelector((state) => state.company.data.companies);
+  
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
@@ -134,22 +136,31 @@ const Sidebar = ({
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuItemClick = (event, index) => {
+  const handleMenuItemClick = (event, index, elementList) => {
+    console.log(index)
     setSelectedIndex(index);
     setAnchorEl(null);
+    if (index === (elementList.length-1)) {
+      setOpenCompanyCreateForm(true)
+    }
   };
+
   const companiesElementList = []
-  
-  if (JSON.stringify(user) != '{}'){
-    user.companies.forEach((company, index) => {
-    companiesElementList.push(<MenuItem key={company.name} selected={index+1 === selectedIndex} onClick={(event) => handleMenuItemClick(event, index+1)} sx={{width: "100%", paddingLeft: "1rem !important", bgcolor: "transparent"}}><StorefrontIcon sx={{mr: "1rem"}}/> {company.name}</MenuItem>)
+  if (JSON.stringify(companies) !== '[]'){
+    // setselectedCompany(1)
+    companies.forEach((company, index) => {
+    companiesElementList.push(<MenuItem key={index} selected={index === selectedIndex} onClick={(event) => handleMenuItemClick(event, index, companiesElementList)} sx={{width: "100%", paddingLeft: "1rem !important", bgcolor: "transparent"}}><StorefrontIcon sx={{mr: "1rem"}}/> {company.name}</MenuItem>)
     }
     )
   }
-  companiesElementList.push(<MenuItem key={"New company"} selected={0 === selectedIndex} onClick={(event) => handleMenuItemClick(event, 0)} sx={{width: "100%", paddingLeft: "1rem !important", bgcolor: "transparent"}}><AddIcon sx={{mr: "1rem" }}/> New company</MenuItem>)
+  companiesElementList.push(<MenuItem key={"New company"} selected={companiesElementList.length-1 === selectedIndex} onClick={(event) => handleMenuItemClick(event, companiesElementList.length-1, companiesElementList)} sx={{width: "100%", paddingLeft: "1rem !important", bgcolor: "transparent"}}><AddIcon sx={{mr: "1rem" }}/> New company</MenuItem>)
   const renderCompanyCombobox = () => {
     return (
+      
       <ListItem width="100%" disablePadding sx={{bgcolor: "transparent"}} key="selectedCompany">
+        
+        <CompanyCreateForm openCompanyCreateForm={openCompanyCreateForm} setOpenCompanyCreateForm={setOpenCompanyCreateForm} setselectedCompany={setselectedCompany}/>
+        
         <ListItemButton
           id="lock-button"
           aria-haspopup="listbox"
@@ -171,6 +182,7 @@ const Sidebar = ({
             display: "flex",
             alignItems: "center"
           }}>{companiesElementList[selectedIndex].props.children}</Box>
+          
           
         </ListItemButton>
       <Menu
@@ -225,7 +237,7 @@ const Sidebar = ({
             <List>
               {navItems.map(({ text, icon, type }) => {
 
-                if (!text && type == "companies"){
+                if (!text && type === "companies"){
                   return (
                     renderCompanyCombobox()
                   )

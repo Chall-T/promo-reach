@@ -29,10 +29,12 @@ const UserSchema = new mongoose.Schema(
       salt: {type: String, select: false}
     },
     companies: [{
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Company"
     }],
     companies_invites: [{
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Company"
     }],
     city: String,
     state: String,
@@ -54,4 +56,12 @@ export const User = mongoose.model("User", UserSchema);
 export const getUserByEmail = (email) => User.findOne({email});
 export const createUser = (data) => new User(data).save().then((user) => user.toObject());
 export const getUserById = (id) => User.findById(id);
+
+export const getAllJoinedCompaniesByUserId = (id) => User.findById(id).select('companies -_id').populate('companies').then((user) => user.toObject());
+
+export const addCompanyToUser = async (companyId, userId) => {
+  const user = await getUserById(userId);
+  user.companies.push(companyId);
+  return user.save().then((user) => user.toObject());
+}
 export default User;

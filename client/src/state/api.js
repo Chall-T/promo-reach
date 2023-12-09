@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setUserId } from "state";
 import { useDispatch } from "react-redux";
 import { authActions } from "features/users/authSlice";
-import  { Navigate } from 'react-router-dom';
 
 const baseQueryWithReauth = (baseQuery) => async (args, apiRequest, extraOptions) => {
   // const dispatch = useDispatch();
@@ -35,6 +34,7 @@ export const api = createApi({
   reducerPath: "adminApi",
   tagTypes: [
     "User",
+    "Company",
     "Products",
     "Customers",
     "Transactions",
@@ -72,7 +72,7 @@ export const api = createApi({
       providesTags: ["User"]
     }),
     logOut: build.query({
-      query: () => ({url: "/auth/logout", method: "POST",}),
+      query: () => ({url: "auth/logout", method: "POST",}),
       providesTags: ["LogOut"],
     }),
     getUser: build.query({
@@ -115,6 +115,37 @@ export const api = createApi({
       query: () => "general/dashboard",
       providesTags: ["Dashboard"],
     }),
+    createCompany: build.query({
+      query: ({ companyName }) => ({
+        url: "company/create",
+        method: "POST",
+        body: {
+          name: companyName
+        }
+      }),
+      providesTags: ["Company"]
+    }),
+    getCompanyById: build.query({
+      query: ({ companyId }) => ({
+        url: `company/${companyId}`,
+        method: "GET",
+      }),
+      providesTags: ["Company"]
+    }),
+    getCompanyUsersById: build.query({
+      query: ({ companyId }) => ({
+        url: `company/users/${companyId}`,
+        method: "GET",
+      }),
+      providesTags: ["Company"]
+    }),
+    getAllJoinedCompanies: build.query({
+      query: () => ({
+        url: `company/allJoined/`,
+        method: "GET",
+      }),
+      providesTags: ["Company"]
+    }),
   }),
 });
 
@@ -130,6 +161,8 @@ export const {
   useGetAdminsQuery,
   useGetUserPerformanceQuery,
   useGetDashboardQuery,
+  useCreateCompanyQuery,
+  useGetCompanyByIdQuery
 } = api;
 
 export const SignInQuery = (value) =>{

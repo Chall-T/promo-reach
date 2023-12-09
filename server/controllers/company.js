@@ -1,15 +1,31 @@
 import express from 'express';
 import pkg from 'lodash';
 const {get, merge} = pkg;
-import { deleteCompanyById, getCompanyById, getCompanies, companyCreate, getCompanyByName } from '../models/Company.js'
-import {User, getUserById} from '../models/User.js';
+import { deleteCompanyById, getCompanyById, getCompanies, companyCreate } from '../models/Company.js'
+import { addUserToCompanyNoInvite } from './companyUser.js';
+import {User, getUserById, getAllJoinedCompaniesByUserId} from '../models/User.js';
+import { addCompanyToUser } from '../models/User.js';
 
 
 export const getCompanyInfo = async(req, res) =>{
     try{
+        console.log(req)
+        const id = get(req, 'identity._id');
         const company = await getCompanyById(id);
 
         return res.status(200).json(company);
+    }catch (error){
+        console.log(error);
+        return res.sendStatus(400);
+    }
+}
+export const getAllJoinedCompanies = async(req, res) => {
+    try{
+        const id = get(req, 'identity._id');
+
+        const companies = await getAllJoinedCompaniesByUserId(id);
+        console.log(companies)
+        return res.status(200).json(companies);
     }catch (error){
         console.log(error);
         return res.sendStatus(400);
@@ -61,21 +77,24 @@ export const updateCompany = async(req, res) =>{
 export const createCompany =async (req, res) =>{
     try{
         const {name} = req.body;
-        let token = req.headers["x-access-token"];
-        const { id, exp } = jwt.decode(token)
-        if (!id){
-            return res.sendStatus(400);
-        }
-        const existingCompany = await getCompanyByName(name);
-        if (existingCompany){
-            return res.status(400).json({message: "Company name is already taken"}).end();
-        }
-        const user = await getUserById(id)
+        const id = get(req, 'identity._id');
+
+        // const existingCompany = await getCompanyByName(name);
+        // if (existingCompany){
+        //     return res.status(400).json({message: "Company name is already taken"}).end();
+        // }
+        console.log(name)
+        if (!name) return res.status(400);
         const company = await companyCreate({
             name,
-            owner: user
+            owner: id
         });
-        return res.status(200).json(company).end();
+        await addCompanyToUser(company._id, id);
+
+        merge(req, {company: company});
+
+        return addUserToCompanyNoInvite(req, res);
+        //return res.status(200).json(company).end();
     }catch (error){
         console.log(error);
         return res.sendStatus(400);

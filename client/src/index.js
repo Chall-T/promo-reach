@@ -9,13 +9,15 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { api } from "state/api";
 import userReducer from "features/users/usersSlice";
 import { authSlice } from "features/users/authSlice";
+import companyReducer from "features/companies/companySlice";
 import { authMiddleware } from "state/middleware";
 const store = configureStore({
   reducer: {
     global: globalReducer,
     [api.reducerPath]: api.reducer,
     user: userReducer,
-    auth: authSlice.reducer
+    auth: authSlice.reducer,
+    company: companyReducer
   },
   middleware: (getDefault) => getDefault().concat([api.middleware, authMiddleware]),
 });

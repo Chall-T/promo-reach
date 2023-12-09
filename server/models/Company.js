@@ -20,7 +20,8 @@ export const Company = mongoose.model('Company', CompanySchema);
 export const getCompanies = () => Company.find().populate('owner');
 export const getCompaniesByOwner = (owner) => Company.findOne({owner});
 export const getCompanyById = (id) => Company.findById(id);
-export const getCompanyByName = (name) => Company.findOne({name});
+
+// export const getCompanyByName = (name) => Company.findOne({name}); Names are not unique
 
 export const getCompaniesByOwnerId = (id) => Company.find({owner: id});
 export const getCompanyByIdWithUser = (id) => Company.findById({id}).populate('owner');
