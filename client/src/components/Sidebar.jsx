@@ -121,8 +121,10 @@ const Sidebar = ({
   const lastSelectedCompany = useSelector((state) => state.company.data.lastSelectedCompany);
   useEffect(() => {
     dispatch(getAllJoinedCompanies()).unwrap().then((payload)=>{
-      if(payload && payload.message === 'OK'){
+      console.log(payload)
+      if(payload && payload.status === "fulfilled"){
         payload.data.companies.forEach((company, index) => {
+          console.log(lastSelectedCompany, company._id, lastSelectedCompany)
           if (lastSelectedCompany && company._id === lastSelectedCompany){
             setSelectedIndex(index)
           }

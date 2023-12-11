@@ -33,7 +33,6 @@ const SignUp = () => {
         dispatch(api.endpoints.signUp.initiate(values))
             .unwrap()
             .then((payload) => {
-                console.log('fulfilled', payload)
                 window.location.href = "/Dashboard";
             })
             .catch((error) => {

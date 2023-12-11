@@ -48,7 +48,6 @@ export const addUserToCompanyNoInvite = async(req, res) =>{
             }],
             added_by: id
         });
-        console.log(companyUser)
         return res.status(200).json(get(req, 'company')).end();
     }catch (error){
         console.log(error);

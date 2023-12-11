@@ -15,7 +15,6 @@ export const getCompanyById = createAsyncThunk('company/getById', async (company
 
 
 export const createCompany = createAsyncThunk('company/create', async (companyName, thunkAPI ) => {
-    console.log('createCompany', companyName)
     const { currentRequestId, loading } = thunkAPI.getState().company
   if (loading !== 'pending' || thunkAPI.requestId !== currentRequestId) {
     return
@@ -45,7 +44,7 @@ export const companySlice = createSlice({
   name: 'company',
   initialState: {
     data: {
-        lastCompanySelected: cookies.get('lastCompanySelected') || null,
+        lastCompanySelected: cookies.get('lastCompanySelected').payload || null,
         companies: [],
         users: []
     },

@@ -20,10 +20,9 @@ import SignUp from "scenes/SignUp";
 import SignIn from "scenes/SignIn";
 function App() {
   const mode = useSelector((state) => state.global.mode);
-  // console.log(useSelector((state)=> state.adminApi))
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
 
-  const isLoggedIn = true //useSelector((state) => state.global.isLoggedIn);
+  const isLoggedIn = true 
   return (
     <div className="app">
       <BrowserRouter>

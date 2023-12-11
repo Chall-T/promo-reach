@@ -9,7 +9,6 @@ import { addCompanyToUser } from '../models/User.js';
 
 export const getCompanyInfo = async(req, res) =>{
     try{
-        console.log(req)
         const id = get(req, 'identity._id');
         const company = await getCompanyById(id);
 
@@ -24,7 +23,6 @@ export const getAllJoinedCompanies = async(req, res) => {
         const id = get(req, 'identity._id');
 
         const companies = await getAllJoinedCompaniesByUserId(id);
-        console.log(companies)
         return res.status(200).json(companies);
     }catch (error){
         console.log(error);

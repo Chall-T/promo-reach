@@ -170,7 +170,6 @@ export const SignInQuery = (value) =>{
   const result = useSignInQuery(value)
   const dispatch = useDispatch();
   if (dashboardResult.data) {
-    console.log(dashboardResult.data)
     window.location.href ="/dashboard";
   }
   if (!result.data) return result;
