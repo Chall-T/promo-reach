@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, useTheme } from "@mui/material";
 import { GetUserPerformanceQuery } from "state/api";
-import { useSelector } from "react-redux";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "components/Header";
 import CustomColumnMenu from "components/DataGridCustomColumnMenu";

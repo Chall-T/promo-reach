@@ -4,6 +4,6 @@ import { isAuthenticated } from "../middlewares/index.js";
 const router = express.Router();
 
 router.get("/user/", isAuthenticated, getUser);
-router.get("/dashboard", isAuthenticated, getDashboardStats);
+router.get("/dashboard/:company_id", isAuthenticated, getDashboardStats);
 
 export default router;

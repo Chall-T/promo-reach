@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setUserId } from "state";
 import { useDispatch } from "react-redux";
 import { authActions } from "features/users/authSlice";
+import logger from "helpers/logger";
 
 const baseQueryWithReauth = (baseQuery) => async (args, apiRequest, extraOptions) => {
   // const dispatch = useDispatch();
@@ -25,7 +26,7 @@ const adminApiBaseQuery = fetchBaseQuery({
   baseUrl: process.env.REACT_APP_BASE_URL, 
   credentials: 'include', 
   onError: (error) => {
-    console.log('An error occurred:', error);
+    logger.error('An error occurred:', error);
   },
 })
 
@@ -112,7 +113,7 @@ export const api = createApi({
       providesTags: ["Performance"],
     }),
     getDashboard: build.query({
-      query: () => "general/dashboard",
+      query: (id) => `general/dashboard/${id}`,
       providesTags: ["Dashboard"],
     }),
     createCompany: build.query({

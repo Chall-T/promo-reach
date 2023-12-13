@@ -10,10 +10,10 @@ import { useTheme, Box } from "@mui/material";
 import * as yup from "yup";
 import { Formik } from "formik";
 import CircularProgress from '@mui/material/CircularProgress';
-import { enqueueSnackbar, SnackbarProvider  } from 'notistack';
+import { SnackbarProvider  } from 'notistack';
 import { createCompany } from 'features/companies/companySlice';
 import { useDispatch, useSelector } from "react-redux";
-
+import logger from 'helpers/logger';
 
 const companyCreationSchema = yup.object().shape({
     companyName: yup.string().required("required").min(4),
@@ -41,12 +41,12 @@ const CompanyCreateForm = ({openCompanyCreateForm, setOpenCompanyCreateForm}) =>
             onSubmit={async values =>{
                 setFormSubmitted(true)
                 dispatch(createCompany(values.companyName)).unwrap()
-                console.log(company)
+                logger.debug(company)
                 company.map((company) =>{
-                    console.log(company)
+                    logger.debug(company)
                 })
                 // if (company.name !== values.companyName){
-                //     console.log(company.name)
+                //     logger.debug(company.name)
                 //     dispatch(createCompany(values.companyName)).unwrap().then((payload) => {
                 //         if(payload.status === 'fulfilled'){
                 //             enqueueSnackbar(`Company ${values.companyName} succesfully created!`, {variant: 'success'});
@@ -94,7 +94,7 @@ const CompanyCreateForm = ({openCompanyCreateForm, setOpenCompanyCreateForm}) =>
                 </DialogContent>
                 <DialogActions>
                     <Box width="60px"><Button onClick={handleClose} sx={{color: theme.palette.secondary[300]}}>Cancel</Button></Box>
-                    {formSubmitted? <Box sx={{ display: 'flex', width:"60px", display: "flex", justifyItems: "right"}}> <CircularProgress sx={{color: theme.palette.secondary[500]}} /> </Box> :<Box width="60px"><Button onClick={handleSubmit} sx={{color: theme.palette.secondary[300]}}>Create</Button></Box>}
+                    {formSubmitted? <Box sx={{ display: 'flex', width:"60px", justifyItems: "right"}}> <CircularProgress sx={{color: theme.palette.secondary[500]}} /> </Box> :<Box width="60px"><Button onClick={handleSubmit} sx={{color: theme.palette.secondary[300]}}>Create</Button></Box>}
                     {/* <Button onClick={handleSubmit} sx={{color: theme.palette.secondary[300]}}>Create</Button> */}
                 </DialogActions>
             </Dialog>

@@ -38,6 +38,9 @@ import StorefrontIcon from '@mui/icons-material/Storefront';
 import CompanyCreateForm from "./CompanyCreateForm";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllJoinedCompanies, setLastCompanySelected } from "features/companies/companySlice";
+import logger from "helpers/logger";
+
+
 const navItems = [
   {
     text: null,
@@ -108,6 +111,7 @@ const Sidebar = ({
   isSidebarOpen,
   setIsSidebarOpen,
   isNonMobile,
+  setCompany
 }) => {
   const { pathname } = useLocation();
   const [active, setActive] = useState("");
@@ -118,20 +122,21 @@ const Sidebar = ({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const open = Boolean(anchorEl);
   const [openCompanyCreateForm, setOpenCompanyCreateForm] = useState(false);
-  const lastSelectedCompany = useSelector((state) => state.company.data.lastSelectedCompany);
+  const lastSelectedCompany = useSelector((state) => state.company.data.lastCompanySelected);
   useEffect(() => {
     dispatch(getAllJoinedCompanies()).unwrap().then((payload)=>{
-      console.log(payload)
       if(payload && payload.status === "fulfilled"){
         payload.data.companies.forEach((company, index) => {
-          console.log(lastSelectedCompany, company._id, lastSelectedCompany)
           if (lastSelectedCompany && company._id === lastSelectedCompany){
+            
+            logger.info(`Setting company index to: ${company.name}`)
+            setCompany(company)
             setSelectedIndex(index)
           }
         })
       }
     })
-  }, []);
+  }, [dispatch, lastSelectedCompany]);
   const companyData = useSelector((state) => state.company.data);
   
   useEffect(() => {
@@ -147,12 +152,13 @@ const Sidebar = ({
   };
 
   const handleMenuItemClick = (event, index, elementList) => {
-    
+    logger.debug('handleMenuItemClick', index)
     setSelectedIndex(index);
     setAnchorEl(null);
-    console.log(companyData.companies)
+    logger.debug(companyData.companies)
     if (index !== (elementList.length-1)) {
-      dispatch(setLastCompanySelected(companyData.companies[index]._id));
+      const companyId = companyData.companies[index]._id
+      dispatch(setLastCompanySelected(companyId));
 
     }
     if (index === (elementList.length-1)) {

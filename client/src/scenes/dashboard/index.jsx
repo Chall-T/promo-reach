@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
 import {
@@ -18,13 +19,18 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import BreakdownChart from "components/BreakdownChart";
 import OverviewChart from "components/OverviewChart";
-import { GetDashboardQuery } from "state/api";
+import { api } from "state/api";
 import StatBox from "components/StatBox";
+import {useOutletContext } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const Dashboard = () => {
+  const {company} = useOutletContext()
+  const dispatch = useDispatch();
+
+  const { data, isLoading } = dispatch(api.endpoints.getDashboard.initiate(company._id, {forceRefetch: true}))
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data, isLoading } = GetDashboardQuery();
 
 
   const columns = [

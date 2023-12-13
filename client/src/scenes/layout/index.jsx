@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, useMediaQuery } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { Outlet, useOutletContext  } from "react-router-dom";
 import Navbar from "components/Navbar";
 import Sidebar from "components/Sidebar";
 import { asyncGetUser } from "features/users/usersSlice";
@@ -10,6 +10,7 @@ const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const dispatch = useDispatch();
   const { data } = dispatch(asyncGetUser());
+  const [company, setCompany] = useState({});
 
   return (
     <Box display={isNonMobile ? "flex" : "block"} width="100%" height="100%">
@@ -19,6 +20,7 @@ const Layout = () => {
         drawerWidth="250px"
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
+        setCompany={setCompany}
       />
       <Box flexGrow={1}>
         <Navbar
@@ -26,7 +28,7 @@ const Layout = () => {
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
         />
-        <Outlet />
+        <Outlet context={{company}}/>
       </Box>
     </Box>
   );

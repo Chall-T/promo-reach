@@ -6,6 +6,7 @@ import { Formik } from "formik";
 import { useDispatch } from "react-redux";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { api, GetDashboardQuery } from "state/api";
+import logger from "helpers/logger";
 const initialValues = {
     firstName: "",
     lastName: "",
@@ -38,7 +39,7 @@ const SignUp = () => {
             .catch((error) => {
                 if (error.data.email){
                     triedEmails.push(values.email);
-                    console.log(error.data.email)
+                    logger.error(error.data.email)
                     userSchema.email = yup.string().email("invalid email").notOneOf(triedEmails, error.data.email).required("required").max(50)
                 }
                 console.error('rejected', error, values.email)

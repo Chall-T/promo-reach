@@ -54,7 +54,7 @@ export const companySlice = createSlice({
   },
   reducers: {
     setLastCompanySelected: (state, companyId) => {
-        state.data.lastCompanySelected = companyId;
+        state.data.lastCompanySelected = companyId.payload;
         cookies.set('lastCompanySelected', companyId, { path: '/' });
     },
   },

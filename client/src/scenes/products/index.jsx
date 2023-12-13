@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import Header from "components/Header";
 import { GetProductsQuery } from "state/api";
-
+import logger from "helpers/logger";
 const Product = ({
   _id,
   name,
@@ -127,7 +127,7 @@ const Products = () => {
                 stat={stat}
               />
             )
-          ):console.log(error) }
+          ):logger.error(error) }
         </Box>
       ) : (
         <>Loading...</>

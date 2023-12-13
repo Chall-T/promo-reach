@@ -16,7 +16,6 @@ router.delete("/delete/:company_id", isAuthenticated, isInCompany, deleteCompany
 
 router.get("/users/:company_id", isAuthenticated, isInCompany, getCompanyUsersById);
 
-router.get("/all", isAuthenticated, getAllJoinedCompanies);
+router.get("/allJoined", isAuthenticated, getAllJoinedCompanies);
 router.get("/:company_id", isAuthenticated, getCompanyInfo);
-console.log(router)
 export default router;

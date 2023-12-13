@@ -28,7 +28,6 @@ import {
   dataOverallStat,
   dataAffiliateStat,
 } from "./data/index.js";
-import jwt from 'jsonwebtoken';
 
 
 /* CONFIGURATION */
