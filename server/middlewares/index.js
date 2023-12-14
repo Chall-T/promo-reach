@@ -27,19 +27,20 @@ export const isAuthenticated = async(req, res, next) =>{
 export const isInCompany = async(req, res, next) =>{
     try{
         const currentUserId = get(req, 'identity._id');
-        const { companyId } = req.params;
-        
+        const { company_id } = req.params;
+        if (company_id==='undefined' || !company_id){
+            return res.status(400).json({message: "Missing company id param!"});
+        }
         if (!currentUserId){
-            return res.sendStatus(403);
+            return res.sendStatus(500);
         }
         const companies = await getCompaniesByUserId(currentUserId);
-
         for (let i = 0; i < companies.length; i++) {
-            if (companyId == companies[i]._id){
+            if (company_id == companies[i].company){
                 return next();
             }
         }
-        return res.sendStatus(401);
+        return res.status(403).json({message: "Is not in company!"});
     }catch(error){
         console.log(error);
         return res.sendStatus(500);

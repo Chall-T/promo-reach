@@ -27,8 +27,19 @@ import { useDispatch } from "react-redux";
 const Dashboard = () => {
   const {company} = useOutletContext()
   const dispatch = useDispatch();
+  
+  const [dashboardData, setDashboardData] = useState(false);
+  const [dashboardIsLoading, setDashboardIsLoading] = useState(true);
+  useEffect(() => {
+    if (company._id){
+      dispatch(api.endpoints.getDashboard.initiate(company._id, {forceRefetch: true})).unwrap().then((payload)=>{
+        setDashboardIsLoading(false)
+        setDashboardData(payload)
+      })
+    }
+  }, [company]);
 
-  const { data, isLoading } = dispatch(api.endpoints.getDashboard.initiate(company._id, {forceRefetch: true}))
+  // const { data, isLoading } = dispatch(api.endpoints.getDashboard.initiate(company._id, {forceRefetch: true}))
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
 
@@ -98,7 +109,7 @@ const Dashboard = () => {
         {/* ROW 1 */}
         <StatBox
           title="Total Customers"
-          value={data && data.totalCustomers}
+          value={dashboardData && dashboardData.totalCustomers}
           increase="+14%"
           description="Since last month"
           icon={
@@ -109,7 +120,7 @@ const Dashboard = () => {
         />
         <StatBox
           title="Sales Today"
-          value={data && data.todayStats.totalSales}
+          value={dashboardData && dashboardData.todayStats.totalSales}
           increase="+21%"
           description="Since last month"
           icon={
@@ -129,7 +140,7 @@ const Dashboard = () => {
         </Box>
         <StatBox
           title="Monthly Sales"
-          value={data && data.thisMonthStats.totalSales}
+          value={dashboardData && dashboardData.thisMonthStats.totalSales}
           increase="+5%"
           description="Since last month"
           icon={
@@ -140,7 +151,7 @@ const Dashboard = () => {
         />
         <StatBox
           title="Yearly Sales"
-          value={data && data.yearlySalesTotal}
+          value={dashboardData && dashboardData.yearlySalesTotal}
           increase="+43%"
           description="Since last month"
           icon={
@@ -181,9 +192,9 @@ const Dashboard = () => {
           }}
         >
           <DataGrid
-            loading={isLoading || !data}
+            loading={dashboardIsLoading || !dashboardData}
             getRowId={(row) => row._id}
-            rows={(data && data.transactions) || []}
+            rows={(dashboardData && dashboardData.transactions) || []}
             columns={columns}
           />
         </Box>

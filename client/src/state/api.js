@@ -204,6 +204,6 @@ export const GetSalesQuery = () =>{
   return useGetSalesQuery()
 }
 
-export const GetDashboardQuery = () =>{
-  return useGetDashboardQuery()
+export const GetDashboardQuery = (data) =>{
+  return useGetDashboardQuery(data)
 }
