@@ -48,10 +48,14 @@ To run this project, you will need to add the following environment variables to
 
 - MongoDB<a href="https://www.mongodb.com/"> Here</a>
 
-### Installation
+### Installation with npm
 
 - npm install ./server
 - npm install ./client
+  
+### Installation and running with docker
+
+- docker-compose up -d
 
 ## :warning: License
 
