@@ -1,9 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import {api} from 'state/api'
 import { isAnyOf } from '@reduxjs/toolkit'
-import Cookies from 'universal-cookie';
 
-const cookies = new Cookies();
 export const getCompanyById = createAsyncThunk('company/getById', async (companyId, thunkAPI ) => {
     const { currentRequestId, loading } = thunkAPI.getState().company
     if (loading !== 'pending' || thunkAPI.requestId !== currentRequestId) {
@@ -44,7 +42,7 @@ export const companySlice = createSlice({
   name: 'company',
   initialState: {
     data: {
-        lastCompanySelected: cookies.get('lastCompanySelected').payload || null,
+        lastCompanySelected: window.localStorage.getItem("lastCompanySelected") || null,
         companies: [],
         users: []
     },
@@ -55,7 +53,8 @@ export const companySlice = createSlice({
   reducers: {
     setLastCompanySelected: (state, companyId) => {
         state.data.lastCompanySelected = companyId.payload;
-        cookies.set('lastCompanySelected', companyId, { path: '/' });
+        window.localStorage.setItem("lastCompanySelected", companyId.payload);
+        // cookies.set('lastCompanySelected', companyId, { path: '/' });
     },
   },
   extraReducers: (builder) => {

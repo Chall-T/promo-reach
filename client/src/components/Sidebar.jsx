@@ -136,7 +136,7 @@ const Sidebar = ({
         })
       }
     })
-  }, [dispatch, lastSelectedCompany]);
+  }, [lastSelectedCompany, setCompany, dispatch]);
   const companyData = useSelector((state) => state.company.data);
   
   useEffect(() => {

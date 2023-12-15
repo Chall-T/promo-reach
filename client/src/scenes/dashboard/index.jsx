@@ -37,7 +37,7 @@ const Dashboard = () => {
         setDashboardData(payload)
       })
     }
-  }, [company]);
+  }, [company, dispatch]);
 
   // const { data, isLoading } = dispatch(api.endpoints.getDashboard.initiate(company._id, {forceRefetch: true}))
   const theme = useTheme();

@@ -42,9 +42,9 @@ const CompanyCreateForm = ({openCompanyCreateForm, setOpenCompanyCreateForm}) =>
                 setFormSubmitted(true)
                 dispatch(createCompany(values.companyName)).unwrap()
                 logger.debug(company)
-                company.map((company) =>{
-                    logger.debug(company)
-                })
+                // company.map((company) =>{
+                //     logger.debug(company)
+                // })
                 // if (company.name !== values.companyName){
                 //     logger.debug(company.name)
                 //     dispatch(createCompany(values.companyName)).unwrap().then((payload) => {

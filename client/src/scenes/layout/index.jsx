@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, useMediaQuery } from "@mui/material";
-import { Outlet, useOutletContext  } from "react-router-dom";
+import { Outlet  } from "react-router-dom";
 import Navbar from "components/Navbar";
 import Sidebar from "components/Sidebar";
 import { asyncGetUser } from "features/users/usersSlice";
