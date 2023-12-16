@@ -1,9 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setUserId } from "state";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "features/users/authSlice";
 import logger from "helpers/logger";
-
 const baseQueryWithReauth = (baseQuery) => async (args, apiRequest, extraOptions) => {
   // const dispatch = useDispatch();
   let result = await baseQuery(args, apiRequest, extraOptions)
@@ -101,8 +100,9 @@ export const api = createApi({
       providesTags: ["Geography"],
     }),
     getSales: build.query({
-      query: () => "sales/sales",
+      query: (id) => `sales/sales/${id}`,
       providesTags: ["Sales"],
+
     }),
     getAdmins: build.query({
       query: () => "management/admins",
@@ -134,8 +134,8 @@ export const api = createApi({
       providesTags: ["Company"]
     }),
     getCompanyUsersById: build.query({
-      query: ({ companyId }) => ({
-        url: `company/users/${companyId}`,
+      query: ({ company }) => ({
+        url: `company/users/${company.id}`,
         method: "GET",
       }),
       providesTags: ["Company"]
@@ -167,7 +167,8 @@ export const {
 } = api;
 
 export const SignInQuery = (value) =>{
-  const dashboardResult = useGetDashboardQuery()
+  const lastSelectedCompany = useSelector((state) => state.company.data.lastCompanySelected);
+  const dashboardResult = useGetDashboardQuery(lastSelectedCompany)
   const result = useSignInQuery(value)
   const dispatch = useDispatch();
   if (dashboardResult.data) {
@@ -200,8 +201,8 @@ export const GetUserPerformanceQuery = (userId) =>{
   return useGetUserPerformanceQuery(userId)
 }
 
-export const GetSalesQuery = () =>{
-  return useGetSalesQuery()
+export const GetSalesQuery = (data) =>{
+  return useGetSalesQuery(data)
 }
 
 export const GetDashboardQuery = (data) =>{

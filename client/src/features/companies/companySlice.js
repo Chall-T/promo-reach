@@ -56,6 +56,9 @@ export const companySlice = createSlice({
         window.localStorage.setItem("lastCompanySelected", companyId.payload);
         // cookies.set('lastCompanySelected', companyId, { path: '/' });
     },
+    getLastCompanySelected: (state) => {
+        return { ...state}
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -147,5 +150,5 @@ export const companySlice = createSlice({
         )
   },
 })
-export const { setLastCompanySelected } = companySlice.actions;
+export const { setLastCompanySelected, getLastCompanySelected } = companySlice.actions;
 export default companySlice.reducer

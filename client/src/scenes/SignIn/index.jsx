@@ -4,7 +4,6 @@ import Avatar from '@mui/material/Avatar';
 import * as yup from "yup";
 import { Formik } from "formik";
 import { SignInQuery } from "state/api";
-
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 const initialValues = {
@@ -20,9 +19,7 @@ const userSchema = yup.object().shape({
 
 const SignIn = () => {
     const theme = useTheme();
-
     const [data, setData] = useState()
-
     SignInQuery(data);
     return (
     <Container>

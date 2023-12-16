@@ -32,7 +32,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const theme = useTheme();
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [logOutTriggered, setSetlogOutTriggered] = useState(false);
+  const [logOutTriggered, setlogOutTriggered] = useState(false);
 
   const isOpen = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
@@ -40,7 +40,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const handleLogOut = () => {
     dispatch(api.endpoints.logOut.initiate()).unwrap().then((payload) => {
         if(payload.message === 'OK'){
-          setSetlogOutTriggered(true)
+          setlogOutTriggered(true)
         }
     });
   }

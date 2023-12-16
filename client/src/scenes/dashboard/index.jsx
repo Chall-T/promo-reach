@@ -74,7 +74,6 @@ const Dashboard = () => {
       renderCell: (params) => `$${Number(params.value).toFixed(2)}`,
     },
   ];
-
   return (
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
@@ -136,7 +135,10 @@ const Dashboard = () => {
           p="1rem"
           borderRadius="0.55rem"
         >
-          <OverviewChart view="sales" isDashboard={true} />
+          {
+            dashboardData ? <OverviewChart view="sales" isDashboard={true} declaredData={dashboardData} /> : ''
+          }
+          
         </Box>
         <StatBox
           title="Monthly Sales"
@@ -208,7 +210,8 @@ const Dashboard = () => {
           <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
             Sales By Category
           </Typography>
-          <BreakdownChart isDashboard={true} />
+
+          <BreakdownChart isDashboard={true}/>
           <Typography
             p="0 0.6rem"
             fontSize="0.8rem"

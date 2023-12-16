@@ -1,16 +1,34 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
-import { useGetSalesQuery } from "state/api";
+import { api } from "state/api";
 import  { Navigate } from 'react-router-dom';
-
+import {useOutletContext } from "react-router-dom";
+import {useDispatch} from "react-redux";
+import logger from "helpers/logger";
 const OverviewChart = ({ isDashboard = false, view }) => {
+  const {company} = useOutletContext()
   const theme = useTheme();
-  const { data, isLoading, error } = useGetSalesQuery();
-
+  const dispatch = useDispatch();
+  // const { data, isLoading, error } = {data:isDashboard, isLoading:isDashboard, error:isDashboard}
+  
+  const [data, setData] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState();
+  useEffect(() =>{
+    if (!!company._id){
+      dispatch(api.endpoints.getSales.initiate(company._id)).unwrap().then((payload)=>{
+        setIsLoading(false);
+        setData(payload)
+      }).catch((e) =>{
+        setIsLoading(false);
+        setError(e);
+      })
+    }
+  }, [company])
+  
   const [totalSalesLine, totalUnitsLine] = useMemo(() => {
     if (!data) return [];
-
     const { monthlyData } = data;
     const totalSalesLine = {
       id: "totalSales",
@@ -23,6 +41,7 @@ const OverviewChart = ({ isDashboard = false, view }) => {
       data: [],
     };
     if (error){
+      logger.error(error)
       return <Navigate to='/signIn'  />
     }
     Object.values(monthlyData).reduce(

@@ -5,7 +5,8 @@ import * as yup from "yup";
 import { Formik } from "formik";
 import { useDispatch } from "react-redux";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { api, GetDashboardQuery } from "state/api";
+import { api } from "state/api";
+import  { Navigate } from 'react-router-dom';
 import logger from "helpers/logger";
 const initialValues = {
     firstName: "",
@@ -34,7 +35,8 @@ const SignUp = () => {
         dispatch(api.endpoints.signUp.initiate(values))
             .unwrap()
             .then((payload) => {
-                window.location.href = "/Dashboard";
+                return <Navigate to='/Dashboard'  />
+                // window.location.href = "/Dashboard";
             })
             .catch((error) => {
                 if (error.data.email){
@@ -45,8 +47,8 @@ const SignUp = () => {
                 console.error('rejected', error, values.email)
             })
     }
-    const dashboardResult = GetDashboardQuery()
-    if (dashboardResult.data) window.location.href ="/dashboard";
+    // const dashboardResult = GetDashboardQuery()
+    // if (dashboardResult.data) window.location.href ="/dashboard";
     return (
     <Container>
         <Box

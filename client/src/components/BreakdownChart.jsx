@@ -1,18 +1,38 @@
-import React from "react";
+import React, { useState, useEffect} from "react";
 import { ResponsivePie } from "@nivo/pie";
 import { Box, Typography, useTheme } from "@mui/material";
-import { useGetSalesQuery } from "state/api";
-import  { Navigate } from 'react-router-dom';
-
+import { api } from "state/api";
+import {useDispatch} from "react-redux";
+import  { Navigate, useOutletContext } from 'react-router-dom';
+import logger from "helpers/logger";
 const BreakdownChart = ({ isDashboard = false }) => {
   const theme = useTheme();
-  const { data, isLoading, error } = useGetSalesQuery();
+  const dispatch = useDispatch();
+  const {company} = useOutletContext()
+
+  const [BreakdownData, setBreakdownData] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState();
+  useEffect(() =>{
+    if (!!company._id){
+      dispatch(api.endpoints.getSales.initiate(company._id)).unwrap().then((payload)=>{
+        setIsLoading(false);
+        setBreakdownData(payload)
+      }).catch((e) =>{
+        setIsLoading(false);
+        setError(e);
+      })
+    }
+  }, [company])
+  
   if (error){
+    logger.error(error)
     return <Navigate to='/signIn'  />
   }
 
 
-  if (!data || isLoading) return "Loading...";
+  if (!BreakdownData || isLoading) return "Loading...";
+  
 
   const colors = [
     theme.palette.secondary[500],
@@ -20,7 +40,7 @@ const BreakdownChart = ({ isDashboard = false }) => {
     theme.palette.secondary[300],
     theme.palette.secondary[500],
   ];
-  const formattedData = Object.entries(data.salesByCategory).map(
+  const formattedData = Object.entries(BreakdownData.salesByCategory).map(
     ([category, sales], i) => ({
       id: category,
       label: category,
@@ -28,7 +48,6 @@ const BreakdownChart = ({ isDashboard = false }) => {
       color: colors[i],
     })
   );
-
   return (
     <Box
       height={isDashboard ? "400px" : "100%"}
@@ -135,7 +154,7 @@ const BreakdownChart = ({ isDashboard = false }) => {
         }}
       >
         <Typography variant="h6">
-          {!isDashboard && "Total:"} ${data.yearlySalesTotal}
+          {!isDashboard && "Total:"} ${BreakdownData.yearlySalesTotal}
         </Typography>
       </Box>
     </Box>
