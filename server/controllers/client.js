@@ -1,7 +1,7 @@
 import Product from "../models/Product.js";
 import ProductStat from "../models/ProductStat.js";
 import User from "../models/User.js";
-import Transaction from "../models/Transaction.js";
+import TransactionModel from "../models/Transaction.js";
 import getCountryIso3 from "country-iso-2-to-3";
 
 export const getProducts = async (req, res) => {
@@ -51,7 +51,7 @@ export const getTransactions = async (req, res) => {
     };
     const sortFormatted = Boolean(sort) ? generateSort() : {};
 
-    const transactions = await Transaction.find({
+    const transactions = await TransactionModel.find({
       $or: [
         { cost: { $regex: new RegExp(search, "i") } },
         { userId: { $regex: new RegExp(search, "i") } },
@@ -61,7 +61,7 @@ export const getTransactions = async (req, res) => {
       .skip(page * pageSize)
       .limit(pageSize);
 
-    const total = await Transaction.countDocuments({
+    const total = await TransactionModel.countDocuments({
       name: { $regex: search, $options: "i" },
     });
 

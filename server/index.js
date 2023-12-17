@@ -17,7 +17,7 @@ import User from "./models/User.js";
 import { Role } from "./models/Role.js";
 import Product from "./models/Product.js";
 import ProductStat from "./models/ProductStat.js";
-import Transaction from "./models/Transaction.js";
+import TransactionModel from "./models/Transaction.js";
 import {OverallStatModel} from "./models/OverallStat.js";
 import AffiliateStat from "./models/AffiliateStat.js";
 import {
@@ -79,7 +79,7 @@ mongoose
     // OverallStatModel.insertMany(dataOverallStat);
     // Product.insertMany(dataProduct);
     // ProductStat.insertMany(dataProductStat);
-    // Transaction.insertMany(dataTransaction);
+    // TransactionModel.insertMany(dataTransaction);
     // User.insertMany(dataUser);
     // Role.insertMany(dataRole)
   })

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import User from "../models/User.js";
-import Transaction from "../models/Transaction.js";
+import TransactionModel from "../models/Transaction.js";
 import pkg from 'lodash';
 const {get} = pkg;
 
@@ -30,7 +30,7 @@ export const getUserPerformance = async (req, res) => {
     ]);
     const saleTransactions = await Promise.all(
       userWithStats[0].affiliateStats.affiliateSales.map((userId) => {
-        return Transaction.findById(userId);
+        return TransactionModel.findById(userId);
       })
     );
     const filteredSaleTransactions = saleTransactions.filter(

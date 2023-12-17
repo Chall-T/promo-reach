@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const TransactionSchema = new mongoose.Schema(
   {
+    company: String,
     userId: String,
     cost: String,
     products: {
@@ -12,5 +13,8 @@ const TransactionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Transaction = mongoose.model("Transaction", TransactionSchema);
-export default Transaction;
+const TransactionModel = mongoose.model("Transaction", TransactionSchema);
+
+export const createTransaction = (data) => new TransactionModel(data).save().then((transaction) => transaction.toObject());
+
+export default TransactionModel;
