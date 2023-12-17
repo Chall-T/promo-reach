@@ -3,10 +3,12 @@ import { Box, useTheme } from "@mui/material";
 import { useGetCustomersQuery } from "state/api";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
+import {useOutletContext } from "react-router-dom";
 
 const Customers = () => {
+  const {company} = useOutletContext()
   const theme = useTheme();
-  const { data, isLoading } = useGetCustomersQuery();
+  const { data, isLoading } = useGetCustomersQuery(company._id);
 
   const columns = [
     {

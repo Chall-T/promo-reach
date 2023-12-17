@@ -84,7 +84,7 @@ export const api = createApi({
       providesTags: ["Products"],
     }),
     getCustomers: build.query({
-      query: () => "client/customers",
+      query: (id) => `client/customers/${id}`,
       providesTags: ["Customers"],
     }),
     getTransactions: build.query({
@@ -185,8 +185,8 @@ export const GetProductsQuery = () =>{
 export const GetUserQuery = () =>{
   return useGetUserQuery()
 }
-export const GetCustomersQuery = () =>{
-  return useGetCustomersQuery()
+export const GetCustomersQuery = (data) =>{
+  return useGetCustomersQuery(data)
 }
 export const GetTransactionsQuery = ({ id, page, pageSize, sort, search }) =>{
   return useGetTransactionsQuery({ id, page, pageSize, sort, search })

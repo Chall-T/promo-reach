@@ -52,6 +52,7 @@ export const getCustomerByPhoneNumber = (phoneNumber) => Customer.findOne({phone
 
 export const getCustomersByName = (name) => Customer.find({name});
 export const getCustomersByLastName = (lastName) => Customer.find({lastName});
+export const getCustomersByCompanyId = (company) => Customer.find({company})
 
 export const createCustomer = (data) => new Customer(data).save().then((customer) => customer.toObject());
 export const getCustomerById = (id) => Customer.findById(id);
