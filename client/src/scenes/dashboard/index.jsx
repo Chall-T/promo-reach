@@ -109,7 +109,7 @@ const Dashboard = () => {
         <StatBox
           title="Total Customers"
           value={dashboardData && dashboardData.totalCustomers}
-          increase="+14%"
+          increase={dashboardData?`+${(dashboardData.totalCustomers===0? 1:dashboardData.totalCustomers)/(dashboardData.lastMonthData.totalCustomers===0?1:dashboardData.lastMonthData.totalCustomers)*100}%`:''}
           description="Since last month"
           icon={
             <Email
@@ -120,7 +120,7 @@ const Dashboard = () => {
         <StatBox
           title="Sales Today"
           value={dashboardData && dashboardData.todayStats.totalSales}
-          increase="+21%"
+          increase={dashboardData?`+${(dashboardData.todayStats.totalSales===0? 1:dashboardData.todayStats.totalSales)/(dashboardData.lastMonthData.daylySales===0?1:dashboardData.lastMonthData.daylySales)*100}%`:''}
           description="Since last month"
           icon={
             <PointOfSale
@@ -143,7 +143,7 @@ const Dashboard = () => {
         <StatBox
           title="Monthly Sales"
           value={dashboardData && dashboardData.thisMonthStats.totalSales}
-          increase="+5%"
+          increase={dashboardData?`+${(dashboardData.thisMonthStats.totalSales===0? 1:dashboardData.thisMonthStats.totalSales)/(dashboardData.lastMonthData.monthlySales===0?1:dashboardData.lastMonthData.monthlySales)*100}%`:''}
           description="Since last month"
           icon={
             <PersonAdd
@@ -154,7 +154,7 @@ const Dashboard = () => {
         <StatBox
           title="Yearly Sales"
           value={dashboardData && dashboardData.yearlySalesTotal}
-          increase="+43%"
+          increase="+100%"
           description="Since last month"
           icon={
             <Traffic

@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import { OverallStatModel, createNewOverallStatYear, createDayToStatById} from "../models/OverallStat.js";
+import { OverallStatModel, createNewOverallStatYear, createDayToStatById, getOverallStatSinceLastMonth} from "../models/OverallStat.js";
 import TransactionModel from "../models/Transaction.js";
 import pkg from 'lodash';
 const {get} = pkg;
@@ -66,7 +66,7 @@ export const getDashboardStats = async (req, res) => {
       todayStats = createDayData[1]
       
     }
-
+    const lastMonthData = await getOverallStatSinceLastMonth(company_id, currentDateObj)
 
 
     res.status(200).json({
@@ -79,6 +79,7 @@ export const getDashboardStats = async (req, res) => {
       thisMonthStats,
       todayStats,
       transactions,
+      lastMonthData
     });
   } catch (error) {
     res.status(404).json({ message: error.message });
