@@ -88,8 +88,8 @@ export const api = createApi({
       providesTags: ["Customers"],
     }),
     getTransactions: build.query({
-      query: ({ page, pageSize, sort, search }) => ({
-        url: "client/transactions",
+      query: ({ id, page, pageSize, sort, search }) => ({
+        url: `client/transactions/${id}`,
         method: "GET",
         params: { page, pageSize, sort, search },
       }),
@@ -188,8 +188,8 @@ export const GetUserQuery = () =>{
 export const GetCustomersQuery = () =>{
   return useGetCustomersQuery()
 }
-export const GetTransactionsQuery = ({ page, pageSize, sort, search }) =>{
-  return useGetTransactionsQuery({ page, pageSize, sort, search })
+export const GetTransactionsQuery = ({ id, page, pageSize, sort, search }) =>{
+  return useGetTransactionsQuery({ id, page, pageSize, sort, search })
 }
 export const GetGeographyQuery = () =>{
   return useGetGeographyQuery()

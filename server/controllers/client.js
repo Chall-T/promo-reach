@@ -28,6 +28,7 @@ export const getProducts = async (req, res) => {
 
 export const getCustomers = async (req, res) => {
   try {
+    const { company_id } = req.params;
     const customers = await User.find({ role: "user" }).select("-password");
     res.status(200).json(customers);
   } catch (error) {
@@ -37,6 +38,7 @@ export const getCustomers = async (req, res) => {
 
 export const getTransactions = async (req, res) => {
   try {
+    const { company_id } = req.params;
     // sort should look like this: { "field": "userId", "sort": "desc"}
     const { page = 1, pageSize = 20, sort = null, search = "" } = req.query;
 
@@ -52,6 +54,7 @@ export const getTransactions = async (req, res) => {
     const sortFormatted = Boolean(sort) ? generateSort() : {};
 
     const transactions = await TransactionModel.find({
+      company: company_id,
       $or: [
         { cost: { $regex: new RegExp(search, "i") } },
         { userId: { $regex: new RegExp(search, "i") } },
@@ -62,6 +65,7 @@ export const getTransactions = async (req, res) => {
       .limit(pageSize);
 
     const total = await TransactionModel.countDocuments({
+      company: company_id,
       name: { $regex: search, $options: "i" },
     });
 

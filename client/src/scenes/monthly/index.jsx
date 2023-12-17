@@ -3,10 +3,12 @@ import { Box, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { ResponsiveLine } from "@nivo/line";
 import { GetSalesQuery } from "state/api";
+import {useOutletContext } from "react-router-dom";
 
 const Monthly = () => {
+  const {company} = useOutletContext()
   const theme = useTheme();
-  const { data } = GetSalesQuery();
+  const { data } = GetSalesQuery(company._id);
 
   const [formattedData] = useMemo(() => {
     if (!data) return [];

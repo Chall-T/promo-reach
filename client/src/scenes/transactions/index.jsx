@@ -4,10 +4,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import { GetTransactionsQuery } from "state/api";
 import Header from "components/Header";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
+import {useOutletContext } from "react-router-dom";
 
 const Transactions = () => {
   const theme = useTheme();
-
+  const {company} = useOutletContext()
   // values to be sent to the backend
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
@@ -15,6 +16,7 @@ const Transactions = () => {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const { data, isLoading } = GetTransactionsQuery({
+    id: company._id,
     page,
     pageSize,
     sort: JSON.stringify(sort),

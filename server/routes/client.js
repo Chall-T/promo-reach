@@ -5,12 +5,12 @@ import {
   getTransactions,
   getGeography,
 } from "../controllers/client.js";
-import { isAuthenticated } from "../middlewares/index.js";
+import { isAuthenticated, isInCompany } from "../middlewares/index.js";
 const router = express.Router();
 
 router.get("/products", isAuthenticated, getProducts);
-router.get("/customers", isAuthenticated, getCustomers);
-router.get("/transactions", isAuthenticated, getTransactions);
+router.get("/customers/:company_id", isAuthenticated, isInCompany, getCustomers);
+router.get("/transactions/:company_id", isAuthenticated, isInCompany, getTransactions);
 router.get("/geography", isAuthenticated, getGeography);
 
 export default router;
