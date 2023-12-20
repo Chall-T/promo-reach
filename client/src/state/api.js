@@ -13,7 +13,7 @@ const baseQueryWithReauth = (baseQuery) => async (args, apiRequest, extraOptions
   if ((result.error && status === 401) || (result.error && status === 403)) {
     localStorage.setItem('logged_user', JSON.stringify(false));
       // authActions.logout()
-      if (window.location.href.indexOf("SignIn")>-1 || window.location.href.indexOf("SignUp") >-1) {
+      if (window.location.href.indexOf("signIn")===-1 && window.location.href.indexOf("signUp") ===-1) {
         window.location.href ="/signIn";
       }
   }
