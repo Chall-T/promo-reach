@@ -9,7 +9,7 @@ export const Login = createAsyncThunk('user/login', async (args, thunkAPI) => {
 export const asyncGetUser = createAsyncThunk('user/getData', async (args, thunkAPI ) => {
   const { currentRequestId, loading } = thunkAPI.getState().user
   if (loading !== 'pending' || thunkAPI.requestId !== currentRequestId) {
-    return
+    return {}
   }
   const response = await thunkAPI.dispatch(api.endpoints.getUser.initiate());
   return response.data
@@ -59,3 +59,5 @@ export const userSlice = createSlice({
 })
 
 export default userSlice.reducer
+
+export const userActions = userSlice.actions;
